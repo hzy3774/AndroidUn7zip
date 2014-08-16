@@ -34,6 +34,9 @@ start to run,this library is to do the work.<br>
 If you need more compress / extract functions or formats,here more information.
 
 ###4.More information
-More about it http://hzy3774.iteye.com/admin/blogs/2104510 <br>
+* More about it http://hzy3774.iteye.com/blog/2104510 <br>
+* [ITeye blog: http://hzy3774.iteye.com/](http://hzy3774.iteye.com/)
+* [Baidu blog: http://hi.baidu.com/hzyws](http://hi.baidu.com/hzyws)
+* [Sina blog: http://weibo.com/hzy3774](http://weibo.com/hzy3774)
 
-[Welcome to visit my ITeye blog](http://hzy3774.iteye.com/)
+
