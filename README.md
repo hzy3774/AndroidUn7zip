@@ -18,11 +18,11 @@ start to run,this library is to do the work.<br>
 2. if you don't want to compile the c code, just use the library.
 
 ####Demo screenshoot
-![image](https://github.com/hzy3774/Un7zip-for-Android/blob/master/image/android_screen.png)
+![image](https://raw.githubusercontent.com/hzy3774/Un7zip-for-Android/master/images/android_screen.png)
 ####JNI log
-![image](https://github.com/hzy3774/Un7zip-for-Android/blob/master/image/jnilogs.png)
+![image](https://raw.githubusercontent.com/hzy3774/Un7zip-for-Android/master/images/jnilogs.png)
 ####File manager
-![image](https://github.com/hzy3774/Un7zip-for-Android/blob/master/image/file_manager.png)
+![image](https://raw.githubusercontent.com/hzy3774/Un7zip-for-Android/master/images/file_manager.png)
 
 ####code:
     AndUn7z.extract7z(String filePath, String outPath);
