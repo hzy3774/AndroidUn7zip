@@ -36,9 +36,14 @@ If you need more compress / extract functions or formats,here more information.
 ###4.More information
 * More about it http://hzy3774.iteye.com/blog/2104510 <br>
 
-###5.About me
+###5.More about me
 * [ITeye blog: http://hzy3774.iteye.com/](http://hzy3774.iteye.com/)
 * [Baidu blog: http://hi.baidu.com/hzyws](http://hi.baidu.com/hzyws)
-* [Sina blog: http://weibo.com/hzy3774](http://weibo.com/hzy3774)
+* [Sina weibo: http://weibo.com/hzy3774](http://weibo.com/hzy3774)
+
+###6.Contact to me
+* QQ: [377406997](http://wpa.qq.com/msgrd?v=3&uin=377406997&site=qq&menu=yes)
+* Email: [hzy3774@qq.com](mailto:hzy3774@qq.com)
+
 
 
