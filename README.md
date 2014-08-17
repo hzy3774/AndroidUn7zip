@@ -1,4 +1,4 @@
-Un7zip-for-Android
+AndroidUn7zip
 ==================
 
 * A simple android ndk library used to simply extract lzma 7z files.<br>
@@ -18,13 +18,13 @@ start to run,this library is to do the work.<br>
 2. if you don't want to compile the c code, just use the library.
 
 ####Demo screenshoot
-![image](https://raw.githubusercontent.com/hzy3774/Un7zip-for-Android/master/images/android_screen.png)
+![image](https://raw.githubusercontent.com/hzy3774/AndroidUn7zip/master/images/screen.gif)
 ####JNI log
-![image](https://raw.githubusercontent.com/hzy3774/Un7zip-for-Android/master/images/jnilogs.png)
+![image](https://raw.githubusercontent.com/hzy3774/AndroidUn7zip/master/images/jnilog.png)
 ####File manager
-![image](https://raw.githubusercontent.com/hzy3774/Un7zip-for-Android/master/images/file_manager.png)
+![image](https://raw.githubusercontent.com/hzy3774/AndroidUn7zip/master/images/file.png)
 
-####code:
+####simple code:
     AndUn7z.extract7z(String filePath, String outPath);
 
 ###3.Limitation
@@ -35,6 +35,8 @@ If you need more compress / extract functions or formats,here more information.
 
 ###4.More information
 * More about it http://hzy3774.iteye.com/blog/2104510 <br>
+
+###5.About me
 * [ITeye blog: http://hzy3774.iteye.com/](http://hzy3774.iteye.com/)
 * [Baidu blog: http://hi.baidu.com/hzyws](http://hi.baidu.com/hzyws)
 * [Sina blog: http://weibo.com/hzy3774](http://weibo.com/hzy3774)
