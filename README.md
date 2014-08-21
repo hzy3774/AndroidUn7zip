@@ -26,6 +26,7 @@ start to run,this library is to do the work.<br>
 
 ####simple code:
     AndUn7z.extract7z(String filePath, String outPath);
+    extractAssets(Context context, String assetPath, String outPath);
 
 ###3.Limitation
 * 7z(LZMA) extract only
