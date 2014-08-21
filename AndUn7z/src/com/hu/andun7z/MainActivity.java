@@ -42,7 +42,8 @@ public class MainActivity extends Activity {
 				dialog.show();
 				new Thread(){
 					public void run() {
-						AndUn7z.extract7z(etFile.getText().toString(), etOut.getText().toString());
+						//AndUn7z.extract7z(etFile.getText().toString(), etOut.getText().toString());
+						AndUn7z.extractAssets(MainActivity.this, etFile.getText().toString(), etOut.getText().toString());
 						handler.sendEmptyMessage(0);
 					};
 				}.start();
