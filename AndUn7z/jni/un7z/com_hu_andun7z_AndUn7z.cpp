@@ -2,8 +2,6 @@
 #include <jni.h>
 /* Header for class com_hu_andun7z_AndUn7z */
 
-#ifndef _Included_com_hu_andun7z_AndUn7z
-#define _Included_com_hu_andun7z_AndUn7z
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -30,5 +28,4 @@ JNIEXPORT jint JNICALL Java_com_hu_andun7z_AndUn7z_un7zip
 
 #ifdef __cplusplus
 }
-#endif
 #endif
