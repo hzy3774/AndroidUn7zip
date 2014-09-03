@@ -23,16 +23,16 @@ start to run,this library is to do the work.<br>
 ![image](https://raw.githubusercontent.com/hzy3774/AndroidUn7zip/master/images/jnilog.png)
 ####File manager
 ![image](https://raw.githubusercontent.com/hzy3774/AndroidUn7zip/master/images/file.png)
-
+####Now Support Chinese
+![image](https://raw.githubusercontent.com/hzy3774/AndroidUn7zip/master/images/log2.png)
 ####simple code:
     AndUn7z.extract7z(String filePath, String outPath);
     extractAssets(Context context, String assetPath, String outPath);
 
 ###3.Limitation
 * 7z(LZMA) extract only
-* based on lzma sdk465, ASCII encodding file/directory/path names only
 * not support password<br>
-If you need more compress / extract functions or formats,here more information.
+If you need more compress / extract functions or formats,https://github.com/hzy3774/AndroidP7zip
 
 ###4.More information
 * More about it http://hzy3774.iteye.com/blog/2104510 <br>
