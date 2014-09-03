@@ -28,6 +28,10 @@ start to run,this library is to do the work.<br>
 ####simple code:
     AndUn7z.extract7z(String filePath, String outPath);
     extractAssets(Context context, String assetPath, String outPath);
+    
+####2014-9-3 Add file chooser in demo project:
+![image](https://raw.githubusercontent.com/hzy3774/AndroidUn7zip/master/images/screen1.gif)<br>
+Thanks to ExfilePicker:https://github.com/bartwell/ExFilePicker
 
 ###3.Limitation
 * 7z(LZMA) extract only
