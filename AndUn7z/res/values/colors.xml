@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="efp__header_line_color">#33b5e5</color>
+    <color name="efp__header_button_pressed_color">#aa33b5e5</color>
+    <color name="efp__header_divider_color">#45484e</color>
+
+</resources>

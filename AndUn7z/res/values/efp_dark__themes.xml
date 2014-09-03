@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="ExFilePickerThemeDark" parent="@style/_ExFilePickerThemeDark" />
+
+    <style name="_ExFilePickerThemeDark" parent="android:Theme.Black">
+        <item name="android:editTextStyle">@style/EditTextExFilePickerThemeDark</item>
+        <item name="android:textColorHighlight">#9933b5e5</item>
+        <item name="android:checkboxStyle">@style/CheckBoxExFilePickerThemeDark</item>
+        <item name="android:listViewStyle">@style/ListViewExFilePickerThemeDark</item>
+        <item name="android:listViewWhiteStyle">@style/ListViewExFilePickerThemeDark.White</item>
+        <item name="android:spinnerItemStyle">@style/SpinnerItemExFilePickerThemeDark</item>
+        <item name="efp__selected_item_background">@drawable/efp_dark__list_activated_holo</item>
+        <item name="efp__ic_action_cancel">@drawable/efp_dark__ic_action_cancel</item>
+        <item name="efp__ic_action_deselect">@drawable/efp_dark__ic_action_deselect</item>
+        <item name="efp__ic_action_grid">@drawable/efp_dark__ic_action_grid</item>
+        <item name="efp__ic_action_invert_selection">@drawable/efp_dark__ic_action_invert_selection</item>
+        <item name="efp__ic_action_list">@drawable/efp_dark__ic_action_list</item>
+        <item name="efp__ic_action_new_folder">@drawable/efp_dark__ic_action_new_folder</item>
+        <item name="efp__ic_action_ok">@drawable/efp_dark__ic_action_ok</item>
+        <item name="efp__ic_action_select_all">@drawable/efp_dark__ic_action_select_all</item>
+        <item name="efp__ic_action_sort">@drawable/efp_dark__ic_action_sort</item>
+    </style>
+
+</resources>

@@ -1,0 +1,198 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:id="@+id/header1"
+        android:layout_width="match_parent"
+        android:layout_height="48dp" >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@+id/menu_sort1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <ImageButton
+            android:id="@+id/menu_sort1"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/menu_new_folder"
+            android:background="@drawable/efp__header_buttons_selector"
+            android:contentDescription="@string/efp__sort"
+            android:scaleType="center"
+            android:src="?attr/efp__ic_action_sort" />
+
+        <ImageButton
+            android:id="@+id/menu_new_folder"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/menu_change_view"
+            android:background="@drawable/efp__header_buttons_selector"
+            android:contentDescription="@string/efp__new_folder"
+            android:scaleType="center"
+            android:src="?attr/efp__ic_action_new_folder" />
+
+        <ImageButton
+            android:id="@+id/menu_ok1"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/efp__header_buttons_selector"
+            android:contentDescription="@android:string/ok"
+            android:scaleType="center"
+            android:src="?attr/efp__ic_action_ok" />
+
+        <View
+            android:id="@+id/ok1_delimiter"
+            android:layout_width="1dip"
+            android:layout_height="24dp"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/menu_ok1"
+            android:background="@color/efp__header_divider_color" />
+
+        <ImageButton
+            android:id="@+id/menu_change_view"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_toLeftOf="@+id/ok1_delimiter"
+            android:background="@drawable/efp__header_buttons_selector"
+            android:contentDescription="@string/efp__action_grid"
+            android:scaleType="center"
+            android:src="?attr/efp__ic_action_grid" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/header2"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:visibility="gone" >
+
+        <ImageButton
+            android:id="@+id/menu_cancel"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/efp__header_buttons_selector"
+            android:contentDescription="@android:string/cancel"
+            android:scaleType="center"
+            android:src="?attr/efp__ic_action_cancel" />
+
+        <ImageButton
+            android:id="@+id/menu_ok2"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/efp__header_buttons_selector"
+            android:contentDescription="@android:string/ok"
+            android:scaleType="center"
+            android:src="?attr/efp__ic_action_ok" />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="1dip"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/menu_ok2"
+            android:background="@color/efp__header_divider_color" />
+
+        <ImageButton
+            android:id="@+id/menu_invert"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/view1"
+            android:background="@drawable/efp__header_buttons_selector"
+            android:contentDescription="@string/efp__action_invert_selection"
+            android:scaleType="center"
+            android:src="?attr/efp__ic_action_invert_selection" />
+
+        <ImageButton
+            android:id="@+id/menu_deselect"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/menu_invert"
+            android:background="@drawable/efp__header_buttons_selector"
+            android:contentDescription="@string/efp__action_deselect"
+            android:scaleType="center"
+            android:src="?attr/efp__ic_action_deselect" />
+
+        <ImageButton
+            android:id="@+id/menu_select_all"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/menu_deselect"
+            android:background="@drawable/efp__header_buttons_selector"
+            android:contentDescription="@string/efp__action_select_all"
+            android:scaleType="center"
+            android:src="?attr/efp__ic_action_select_all" />
+
+        <ImageButton
+            android:id="@+id/menu_sort2"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/menu_select_all"
+            android:background="@drawable/efp__header_buttons_selector"
+            android:contentDescription="@string/efp__sort"
+            android:scaleType="center"
+            android:src="?attr/efp__ic_action_sort" />
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/menu_cancel"
+            android:background="@color/efp__header_divider_color" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="48dp"
+        android:background="@color/efp__header_line_color" />
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/line"
+        tools:listitem="@layout/efp__list_item" />
+
+    <GridView
+        android:id="@+id/gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/line"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:columnWidth="64dp"
+        android:horizontalSpacing="4dp"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="15dp"
+        android:visibility="gone"
+        tools:listitem="@layout/efp__grid_item" />
+
+</RelativeLayout>

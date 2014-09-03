@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="ExFilePickerThemeDark" parent="@style/_ExFilePickerThemeDark" />
+
+    <style name="_ExFilePickerThemeDark" parent="android:Theme.Holo">
+        <item name="android:editTextBackground">@drawable/efp_dark__edit_text_holo</item>
+        <item name="android:textColorHighlight">#9933b5e5</item>
+        <item name="android:textSelectHandleLeft">@drawable/efp_dark__text_select_handle_left</item>
+        <item name="android:textSelectHandleRight">@drawable/efp_dark__text_select_handle_right</item>
+        <item name="android:textSelectHandle">@drawable/efp_dark__text_select_handle_middle</item>
+        <item name="android:listChoiceIndicatorMultiple">@drawable/efp_dark__btn_check_holo</item>
+        <item name="android:listChoiceBackgroundIndicator">@drawable/efp_dark__list_selector_holo</item>
+        <item name="android:activatedBackgroundIndicator">@drawable/efp_dark__activated_background_holo</item>
+        <item name="efp__selected_item_background">@drawable/efp_dark__list_activated_holo</item>
+        <item name="efp__ic_action_cancel">@drawable/efp_dark__ic_action_cancel</item>
+        <item name="efp__ic_action_deselect">@drawable/efp_dark__ic_action_deselect</item>
+        <item name="efp__ic_action_grid">@drawable/efp_dark__ic_action_grid</item>
+        <item name="efp__ic_action_invert_selection">@drawable/efp_dark__ic_action_invert_selection</item>
+        <item name="efp__ic_action_list">@drawable/efp_dark__ic_action_list</item>
+        <item name="efp__ic_action_new_folder">@drawable/efp_dark__ic_action_new_folder</item>
+        <item name="efp__ic_action_ok">@drawable/efp_dark__ic_action_ok</item>
+        <item name="efp__ic_action_select_all">@drawable/efp_dark__ic_action_select_all</item>
+        <item name="efp__ic_action_sort">@drawable/efp_dark__ic_action_sort</item>
+    </style>
+
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="EditTextExFilePickerThemeDark" parent="android:Widget.EditText">
+        <item name="android:background">@drawable/efp_dark__edit_text_holo</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="CheckBoxExFilePickerThemeDark" parent="android:Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/efp_dark__btn_check_holo</item>
+    </style>
+
+    <style name="ListViewExFilePickerThemeDark" parent="android:Widget.ListView">
+        <item name="android:listSelector">@drawable/efp_dark__list_selector_holo</item>
+    </style>
+
+    <style name="ListViewExFilePickerThemeDark.White" parent="android:Widget.ListView.White">
+        <item name="android:listSelector">@drawable/efp_dark__list_selector_holo</item>
+    </style>
+
+    <style name="SpinnerItemExFilePickerThemeDark" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+</resources>

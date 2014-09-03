@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<declare-styleable name="customAttrs">
+    <attr name="efp__selected_item_background" format="reference" />
+    <attr name="efp__ic_action_cancel" format="reference" />
+    <attr name="efp__ic_action_deselect" format="reference" />
+    <attr name="efp__ic_action_grid" format="reference" />
+    <attr name="efp__ic_action_invert_selection" format="reference" />
+    <attr name="efp__ic_action_list" format="reference" />
+    <attr name="efp__ic_action_new_folder" format="reference" />
+    <attr name="efp__ic_action_ok" format="reference" />
+    <attr name="efp__ic_action_select_all" format="reference" />
+    <attr name="efp__ic_action_sort" format="reference" />
+</declare-styleable>
+
+</resources>

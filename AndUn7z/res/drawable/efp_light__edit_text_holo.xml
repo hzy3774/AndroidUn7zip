@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/efp_light__textfield_default_holo" android:state_enabled="true" android:state_window_focused="false"/>
+    <item android:drawable="@drawable/efp_light__textfield_disabled_holo" android:state_enabled="false" android:state_window_focused="false"/>
+    <item android:drawable="@drawable/efp_light__textfield_activated_holo" android:state_enabled="true" android:state_focused="true"/>
+    <item android:drawable="@drawable/efp_light__textfield_focused_holo" android:state_activated="true" android:state_enabled="true"/>
+    <item android:drawable="@drawable/efp_light__textfield_default_holo" android:state_enabled="true"/>
+    <item android:drawable="@drawable/efp_light__textfield_disabled_focused_holo" android:state_focused="true"/>
+    <item android:drawable="@drawable/efp_light__textfield_disabled_holo"/>
+
+</selector>
