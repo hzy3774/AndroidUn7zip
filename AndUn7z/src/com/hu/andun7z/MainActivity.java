@@ -30,6 +30,8 @@ public class MainActivity extends Activity {
 		
 		dialog = new ProgressDialog(this);
 		dialog.setCancelable(false);
+		dialog.setTitle(R.string.dialog_title);
+		dialog.setMessage(getText(R.string.dialog_content));
 		
 		etFile = (EditText)findViewById(R.id.editText1);
 		etOut = (EditText)findViewById(R.id.editText2);
