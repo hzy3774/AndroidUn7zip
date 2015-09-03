@@ -29,7 +29,7 @@ LOCAL_SRC_FILES := \
 		./src/Ppmd7Dec.c \
 \
 		./src/7zMain.c \
-		./com_hu_andun7z_AndUn7z.cpp
+		./andun7z.cpp
         
 LOCAL_LDLIBS := -llog 
 

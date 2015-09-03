@@ -1,6 +1,9 @@
 /* 7zMain.c - Test application for 7z Decoder
  2010-10-28 : Igor Pavlov : Public domain */
 
+#include <jni.h>
+#include <android/log.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -12,7 +15,23 @@
 #include "7zFile.h"
 #include "7zVersion.h"
 
-#include "../JniWrapper.h"
+#define LOG_TAG "jniLog"
+#undef LOG
+
+#ifdef DEBUG
+#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
+#define LOGW(...) __android_log_print(ANDROID_LOG_WARN,LOG_TAG,__VA_ARGS__)
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
+#define LOGF(...) __android_log_print(ANDROID_LOG_FATAL,LOG_TAG,__VA_ARGS__)
+#else
+#define LOGD(...) do{}while(0)
+#define LOGI(...) do{}while(0)
+#define LOGW(...) do{}while(0)
+#define LOGE(...) do{}while(0)
+#define LOGF(...) do{}while(0)
+#endif
+
 
 #define PATH_MAX 2048
 
