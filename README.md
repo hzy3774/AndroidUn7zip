@@ -11,6 +11,8 @@ start to run,this library is to do the work.<br>
 * This is a small free library with simple function to extract the 7z file
 * It is a jni call library
 * This library is based on LZMA sdk,it does the most job.
+* Add Android studio support, eclipse is supported in eclipse branch
+* NDK is needed
 
 ###2.Usage
 
@@ -26,8 +28,9 @@ start to run,this library is to do the work.<br>
 ####Now Support Chinese
 ![image](https://raw.githubusercontent.com/hzy3774/AndroidUn7zip/master/images/log2.png)
 ####simple code:
-    AndUn7z.extract7z(String filePath, String outPath);
-    extractAssets(Context context, String assetPath, String outPath);
+```
+Un7Zip.extract7z(filePath, outPath);
+```
     
 ####2014-9-3 Add file chooser in demo project:
 ![image](https://raw.githubusercontent.com/hzy3774/AndroidUn7zip/master/images/screen1.gif)<br>
