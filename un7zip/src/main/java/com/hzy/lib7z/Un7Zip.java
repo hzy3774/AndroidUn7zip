@@ -13,7 +13,7 @@ public class Un7Zip {
         if (!outDir.exists() || !outDir.isDirectory()) {
             outDir.mkdirs();
         }
-        return (Un7Zip.un7zip(filePath, outPath) == 1);
+        return (Un7Zip.un7zip(filePath, outPath) == 0);
     }
 
     /**
