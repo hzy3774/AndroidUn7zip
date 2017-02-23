@@ -1,0 +1,1 @@
+APP_ABI := arm64-v8a armeabi-v7a mips64 x86_64  armeabi  mips  x86
