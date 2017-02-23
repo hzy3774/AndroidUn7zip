@@ -38,7 +38,7 @@ public class Un7Zip {
             e.printStackTrace();
             return false;
         }
-        boolean ret = (Un7Zip.un7zip(tempPath, outPath) == 1);
+        boolean ret = (Un7Zip.un7zip(tempPath, outPath) == 0);
         new File(tempPath).delete();
 
         return ret;
