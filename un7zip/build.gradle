@@ -12,7 +12,7 @@ android {
         ndk {
             moduleName "un7zip"
             ldLibs "log"
-//            abiFilters "armeabi", "armeabi-v7a"
+            //abiFilters "armeabi", "armeabi-v7a"
         }
     }
     buildTypes {
