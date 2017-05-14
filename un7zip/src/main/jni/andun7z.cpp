@@ -23,9 +23,12 @@ extern "C" {
 #define LOGE(...) do{}while(0)
 #define LOGF(...) do{}while(0)
 #endif
+#include <android/asset_manager.h>
 
 
 int extract7z(const char *srcFile, const char *dstPath);
+
+int extract7zFromAssets(JNIEnv* env, jobject jAssetsManager,  const char *srcFile, const char *dstPath);
 
 /*
  * Class:     com_hzy_lib7z_Un7Zip
@@ -39,6 +42,23 @@ JNIEXPORT jint JNICALL Java_com_hzy_lib7z_Un7Zip_un7zip
     LOGD("start extract filePath[%s], outPath[%s]", cfilePath, coutPath);
     jint ret = extract7z(cfilePath, coutPath);
     LOGD("end extract");
+    env->ReleaseStringUTFChars(filePath, cfilePath);
+    env->ReleaseStringUTFChars(outPath, coutPath);
+    return ret;
+}
+
+/*
+ * Class:     com_hzy_lib7z_Un7Zip
+ * Method:    un7zip
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)I
+ */
+JNIEXPORT jint JNICALL Java_com_hzy_lib7z_Un7Zip_un7zipFromAssets
+        (JNIEnv *env, jclass thiz, jobject assetsManager, jstring filePath, jstring outPath) {
+    const char *cfilePath = (const char *) env->GetStringUTFChars(filePath, NULL);
+    const char *coutPath = (const char *) env->GetStringUTFChars(outPath, NULL);
+    LOGD("start extract filePath[%s] from assets, outPath[%s]", cfilePath, coutPath);
+    jint ret = extract7zFromAssets(env, assetsManager, cfilePath, coutPath);
+    LOGD("end extract assets file");
     env->ReleaseStringUTFChars(filePath, cfilePath);
     env->ReleaseStringUTFChars(outPath, coutPath);
     return ret;

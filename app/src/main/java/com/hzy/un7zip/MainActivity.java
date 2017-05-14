@@ -46,6 +46,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        findViewById(R.id.button_extract_asset).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startExtractFileFromAssets();
+            }
+        });
     }
 
     private void startExtractFile() {
@@ -53,6 +60,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Un7Zip.extract7z(filePath, outPath);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this, "extracted to: " + outPath, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }.start();
+    }
+
+
+    private void startExtractFileFromAssets() {
+        new Thread() {
+            @Override
+            public void run() {
+                Un7Zip.extract7zFromAssets(MainActivity.this, "TestAsset.7z", outPath);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

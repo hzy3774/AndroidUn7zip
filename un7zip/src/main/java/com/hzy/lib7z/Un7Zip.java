@@ -1,6 +1,7 @@
 package com.hzy.lib7z;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,7 +18,7 @@ public class Un7Zip {
     }
 
     /**
-     * Extract from assets
+     * Extract 7z file from assets
      *
      * @param context
      * @param assetPath
@@ -25,49 +26,17 @@ public class Un7Zip {
      * @return
      * @throws Exception
      */
-    public static boolean extractAssets(Context context, String assetPath, String outPath) {
+    public static boolean extract7zFromAssets(Context context, String assetPath, String outPath) {
         File outDir = new File(outPath);
         if (!outDir.exists() || !outDir.isDirectory()) {
             outDir.mkdirs();
         }
-
-        String tempPath = outPath + File.separator + ".temp";
-        try {
-            copyFromAssets(context, assetPath, tempPath);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-        boolean ret = (Un7Zip.un7zip(tempPath, outPath) == 0);
-        new File(tempPath).delete();
-
-        return ret;
-    }
-
-    /**
-     * Copy asset to temp
-     *
-     * @param context
-     * @param assetPath
-     * @param tempPath
-     * @throws Exception
-     */
-    private static void copyFromAssets(Context context, String assetPath, String tempPath)
-            throws Exception {
-        InputStream inputStream = context.getAssets().open(assetPath);
-        FileOutputStream fileOutputStream = new FileOutputStream(tempPath);
-        int length = -1;
-        byte[] buffer = new byte[0x400000];
-        while ((length = inputStream.read(buffer)) != -1) {
-            fileOutputStream.write(buffer, 0, length);
-        }
-        fileOutputStream.flush();
-        fileOutputStream.close();
-        inputStream.close();
+        return (Un7Zip.un7zipFromAssets(context.getAssets(), assetPath, outPath) == 0);
     }
 
     //JNI interface
     private static native int un7zip(String filePath, String outPath);
+    private static native int un7zipFromAssets(AssetManager assetManager, String filePath, String outPath);
 
     static {
         System.loadLibrary("un7zip");
