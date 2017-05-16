@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hzy.lib7z.Un7Zip;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String filePath;
     private String outPath;
+    private TextView textPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
                 startExtractFileFromAssets();
             }
         });
+
+        textPath = (TextView) findViewById(R.id.text_file_path);
     }
 
     private void startExtractFile() {
@@ -96,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
             actualimagecursor.moveToFirst();
             filePath = actualimagecursor.getString(actual_image_column_index);
             Toast.makeText(MainActivity.this, "choose file:" + filePath, Toast.LENGTH_SHORT).show();
+            textPath.setText(filePath);
         }
     }
 

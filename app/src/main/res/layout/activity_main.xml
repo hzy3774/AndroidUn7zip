@@ -10,6 +10,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.hzy.un7zip.MainActivity">
 
+    <TextView
+        android:id="@+id/text_file_path"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No 7z file selected" />
+
     <Button
         android:id="@+id/button_choose_file"
         android:layout_width="match_parent"
@@ -17,16 +23,16 @@
         android:text="Choose File" />
 
     <Button
-        android:layout_marginTop="10dp"
         android:id="@+id/button_extract"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="Extract 7zip" />
 
     <Button
-        android:layout_marginTop="10dp"
         android:id="@+id/button_extract_asset"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:text="Extract 7zip From Assets" />
 </LinearLayout>
