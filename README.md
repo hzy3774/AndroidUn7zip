@@ -1,8 +1,6 @@
 AndroidUn7zip(安卓7zip解压)
 ==================
 A simple library with lzma sdk for 7z extraction.
-* Screenshot
-![image](https://raw.githubusercontent.com/hzy3774/AndroidUn7zip/master/misc/screen.gif)
 
 ### Introduction
 Java API：
@@ -15,6 +13,9 @@ public static boolean extract7zFromAssets(Context context, String assetPath, Str
 * easily extract 7z from file
 * directly extract 7z from assets
 * unicode file names is available
+
+### Screenshot
+![image](https://raw.githubusercontent.com/hzy3774/AndroidUn7zip/master/misc/screen.gif)
 
 ### Thanks To
 * [danhantao](https://github.com/danhantao) offered X86 compiled(修复了X86编译问题)
