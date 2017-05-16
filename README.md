@@ -1,6 +1,7 @@
 AndroidUn7zip(安卓7zip解压)
 ==================
 A simple library with lzma sdk for 7z extraction.
+* Screenshot
 ![image](https://raw.githubusercontent.com/hzy3774/AndroidUn7zip/master/misc/screen.gif)
 
 ### Introduction
