@@ -9,6 +9,12 @@ import java.io.InputStream;
 
 public class Un7Zip {
 
+    /**
+     * Extract 7z file
+     * @param filePath src file path
+     * @param outPath dst directory
+     * @return status
+     */
     public static boolean extract7z(String filePath, String outPath) {
         File outDir = new File(outPath);
         if (!outDir.exists() || !outDir.isDirectory()) {
@@ -20,11 +26,10 @@ public class Un7Zip {
     /**
      * Extract 7z file from assets
      *
-     * @param context
-     * @param assetPath
-     * @param outPath
-     * @return
-     * @throws Exception
+     * @param context context
+     * @param assetPath asset path
+     * @param outPath dst directory
+     * @return status
      */
     public static boolean extract7zFromAssets(Context context, String assetPath, String outPath) {
         File outDir = new File(outPath);

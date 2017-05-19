@@ -3,6 +3,13 @@ AndroidUn7zip(安卓7zip解压)
 A simple library with lzma sdk for 7z extraction.
 
 ### Introduction
+Import the library:
+```gradle
+dependencies {
+    compile 'com.hzy:un7zip:1.0.0'
+}
+```
+
 Java API：
 ```java
 public static boolean extract7z(String filePath, String outPath);
