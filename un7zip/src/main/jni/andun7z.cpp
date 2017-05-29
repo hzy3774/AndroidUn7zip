@@ -1,7 +1,7 @@
 #include <jni.h>
 #include <android/log.h>
 
-#include "src/Types.h"
+#include "src/7zTypes.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,7 +23,6 @@ extern "C" {
 #define LOGE(...) do{}while(0)
 #define LOGF(...) do{}while(0)
 #endif
-#include <android/asset_manager.h>
 
 
 int extract7z(const char *srcFile, const char *dstPath);

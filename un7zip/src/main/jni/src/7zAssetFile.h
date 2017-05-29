@@ -6,7 +6,7 @@
 
 
 #include <stdio.h>
-#include "Types.h"
+#include "7zTypes.h"
 #include <android/asset_manager.h>
 
 EXTERN_C_BEGIN
@@ -30,7 +30,7 @@ WRes AssetFile_Seek(CSzAssetFile *p, Int64 *pos, ESzSeek origin);
 
 typedef struct
 {
-    ISeekInStream s;
+    ISeekInStream vt;
     CSzAssetFile assetFile;
 } CAssetFileInStream;
 
