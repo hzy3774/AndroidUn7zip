@@ -80,6 +80,6 @@ static SRes AssetFileInStream_Seek(void *pp, Int64 *pos, ESzSeek origin)
 
 void AssetFileInStream_CreateVTable(CAssetFileInStream *p)
 {
-  p->s.Read = AssetFileInStream_Read;
-  p->s.Seek = AssetFileInStream_Seek;
+  p->vt.Read = AssetFileInStream_Read;
+  p->vt.Seek = AssetFileInStream_Seek;
 }
