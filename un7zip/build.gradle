@@ -1,29 +1,33 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.model.library'
 
-android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+model {
+    android {
+        compileSdkVersion 25
+        buildToolsVersion "25.0.3"
 
-    defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        defaultConfig {
+            minSdkVersion.apiLevel 15
+            targetSdkVersion.apiLevel 25
+            versionCode 1
+            versionName "1.0"
+        }
+
         ndk {
             moduleName "un7zip"
-            ldLibs "log", "android"
-            //abiFilters "armeabi", "armeabi-v7a"
+            ldLibs.addAll(["log", "android"])
+            abiFilters.addAll(['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'])
         }
     }
-    buildTypes {
+
+    android.buildTypes {
         debug {
             ndk {
-                cFlags '-DNDK_DEBUG'
+                CFlags.add('-DNDK_DEBUG')
             }
         }
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles.add(file("proguard-rules.pro"))
         }
     }
 }
@@ -31,5 +35,4 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:25.0.1'
 }
