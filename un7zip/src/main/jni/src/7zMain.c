@@ -2,10 +2,9 @@
 2017-04-05 : Igor Pavlov : Public domain */
 
 #include <stdio.h>
-#include <string.h>
-
 #include "CpuArch.h"
 
+#include "NdkHelper.h"
 #include "7z.h"
 #include "7zAlloc.h"
 #include "7zBuf.h"
@@ -22,6 +21,8 @@
 #else
 #include <sys/stat.h>
 #include <errno.h>
+#include <string.h>
+
 #endif
 #endif
 
@@ -34,7 +35,7 @@ static const ISzAlloc g_Alloc = { SzAlloc, SzFree };
 
 static void Print(const char *s)
 {
-  fputs(s, stdout);
+  LOGD(s);
 }
 
 
@@ -201,47 +202,36 @@ static SRes Utf16_To_Char(CBuf *buf, const UInt16 *s
 
 static WRes MyCreateDir(const UInt16 *name, const char *dir)
 {
-  #ifdef USE_WINDOWS_FILE
-  
-  return CreateDirectoryW(name, NULL) ? 0 : GetLastError();
-  
-  #else
-
-  CBuf buf;
-  WRes res;
-  Buf_Init(&buf);
-  RINOK(Utf16_To_Char(&buf, name MY_FILE_CODE_PAGE_PARAM));
-
-  res =
-  #ifdef _WIN32
-  _mkdir((const char *)buf.data)
-  #else
-  mkdir(strcat(dir, (const char *)buf.data), 0777)
-  #endif
-  == 0 ? 0 : errno;
-  Buf_Free(&buf, &g_Alloc);
-  return res;
-  
-  #endif
+    CBuf buf;
+    WRes res;
+    char temp[PATH_MAX] = {0};
+    strcpy(temp, dir);
+    Buf_Init(&buf);
+    RINOK(Utf16_To_Char(&buf, name MY_FILE_CODE_PAGE_PARAM));
+    strcat(temp, STRING_PATH_SEPARATOR);
+    strcat(temp, (const char *) buf.data);
+    Print("mkdir:");
+    Print(temp);
+    res = mkdir((const char *) temp, 0777) == 0 ? 0 : errno;
+    Buf_Free(&buf, &g_Alloc);
+    return res;
 }
 
 static WRes OutFile_OpenUtf16(CSzFile *p, const UInt16 *name, const char *dir)
 {
-  #ifdef USE_WINDOWS_FILE
-  return OutFile_OpenW(p, name);
-  #else
-  CBuf buf;
-  WRes res;
-  Buf_Init(&buf);
-  char temp[PATH_MAX] = {0};
-  RINOK(Utf16_To_Char(&buf, name MY_FILE_CODE_PAGE_PARAM));
-  strcpy(temp, dir);
-  strcat(temp, STRING_PATH_SEPARATOR);
-  strcat(temp, (const char *) buf.data);
-  res = OutFile_Open(p, temp);
-  Buf_Free(&buf, &g_Alloc);
-  return res;
-  #endif
+    CBuf buf;
+    WRes res;
+    Buf_Init(&buf);
+    char temp[PATH_MAX] = {0};
+    RINOK(Utf16_To_Char(&buf, name MY_FILE_CODE_PAGE_PARAM));
+    strcpy(temp, dir);
+    strcat(temp, STRING_PATH_SEPARATOR);
+    strcat(temp, (const char *) buf.data);
+    Print("openfile:");
+    Print(temp);
+    res = OutFile_Open(p, temp);
+    Buf_Free(&buf, &g_Alloc);
+    return res;
 }
 
 
@@ -377,7 +367,7 @@ static void GetAttribString(UInt32 wa, Bool isDir, char *s)
 
 // #define NUM_PARENTS_MAX 128
 
-int MY_CDECL extract7z(char *srcFile, char *destDir)
+int extract7z(const char *srcFile, const char *destDir)
 {
   ISzAlloc allocImp;
   ISzAlloc allocTempImp;
@@ -388,23 +378,13 @@ int MY_CDECL extract7z(char *srcFile, char *destDir)
   SRes res;
   UInt16 *temp = NULL;
   size_t tempSize = 0;
-  // UInt32 parents[NUM_PARENTS_MAX];
 
   Print("\n7z Decoder " MY_VERSION_CPU " : " MY_COPYRIGHT_DATE "\n\n");
-
-  #if defined(_WIN32) && !defined(USE_WINDOWS_FILE) && !defined(UNDER_CE)
-  g_FileCodePage = AreFileApisANSI() ? CP_ACP : CP_OEMCP;
-  #endif
-
 
   allocImp = g_Alloc;
   allocTempImp = g_Alloc;
 
-  #ifdef UNDER_CE
-  if (InFile_OpenW(&archiveStream.file, L"\test.7z"))
-  #else
   if (InFile_Open(&archiveStream.file, srcFile))
-  #endif
   {
     PrintError("can not open input file");
     return 1;
@@ -439,120 +419,91 @@ int MY_CDECL extract7z(char *srcFile, char *destDir)
   
   if (res == SZ_OK)
   {
-    int listCommand = 0, testCommand = 0, fullPaths = 1;
+    UInt32 i;
 
-    if (res == SZ_OK)
+    /*
+    if you need cache, use these 3 variables.
+    if you use external function, you can make these variable as static.
+    */
+    UInt32 blockIndex = 0xFFFFFFFF; /* it can have any value before first call (if outBuffer = 0) */
+    Byte *outBuffer = 0; /* it must be 0 before first call for each new archive. */
+    size_t outBufferSize = 0;  /* it can have any value before first call (if outBuffer = 0) */
+
+    for (i = 0; i < db.NumFiles; i++)
     {
-      UInt32 i;
-
-      /*
-      if you need cache, use these 3 variables.
-      if you use external function, you can make these variable as static.
-      */
-      UInt32 blockIndex = 0xFFFFFFFF; /* it can have any value before first call (if outBuffer = 0) */
-      Byte *outBuffer = 0; /* it must be 0 before first call for each new archive. */
-      size_t outBufferSize = 0;  /* it can have any value before first call (if outBuffer = 0) */
-
-      for (i = 0; i < db.NumFiles; i++)
+      size_t offset = 0;
+      size_t outSizeProcessed = 0;
+      size_t len;
+      unsigned isDir = SzArEx_IsDir(&db, i);
+      len = SzArEx_GetFileNameUtf16(&db, i, NULL);
+      if (len > tempSize)
       {
-        size_t offset = 0;
-        size_t outSizeProcessed = 0;
-        // const CSzFileItem *f = db.Files + i;
-        size_t len;
-        unsigned isDir = SzArEx_IsDir(&db, i);
-        if (listCommand == 0 && isDir && !fullPaths)
-          continue;
-        len = SzArEx_GetFileNameUtf16(&db, i, NULL);
-        // len = SzArEx_GetFullNameLen(&db, i);
-
-        if (len > tempSize)
-        {
           SzFree(NULL, temp);
           tempSize = len;
           temp = (UInt16 *)SzAlloc(NULL, tempSize * sizeof(temp[0]));
           if (!temp)
           {
-            res = SZ_ERROR_MEM;
-            break;
+              res = SZ_ERROR_MEM;
+              break;
           }
-        }
-
-        SzArEx_GetFileNameUtf16(&db, i, temp);
-        res = PrintString(temp);
-        if (res != SZ_OK)
-          break;
-        
-        if (isDir)
-          Print("/");
-        else
-        {
-          res = SzArEx_Extract(&db, &lookStream.vt, i,
-              &blockIndex, &outBuffer, &outBufferSize,
-              &offset, &outSizeProcessed,
-              &allocImp, &allocTempImp);
-          if (res != SZ_OK)
-            break;
-        }
-        
-        if (!testCommand)
-        {
-          CSzFile outFile;
-          size_t processedSize;
-          size_t j;
-          UInt16 *name = (UInt16 *)temp;
-          const UInt16 *destPath = (const UInt16 *)name;
- 
-          for (j = 0; name[j] != 0; j++)
-            if (name[j] == '/')
-            {
-              if (fullPaths)
-              {
-                name[j] = 0;
-                MyCreateDir(name, destDir);
-                name[j] = CHAR_PATH_SEPARATOR;
-              }
-              else
-                destPath = name + j + 1;
-            }
-    
-          if (isDir)
-          {
-            MyCreateDir(destPath, destDir);
-            PrintLF();
-            continue;
-          }
-          else if (OutFile_OpenUtf16(&outFile, destPath, destDir))
-          {
-            PrintError("can not open output file");
-            res = SZ_ERROR_FAIL;
-            break;
-          }
-
-          processedSize = outSizeProcessed;
-          
-          if (File_Write(&outFile, outBuffer + offset, &processedSize) != 0 || processedSize != outSizeProcessed)
-          {
-            PrintError("can not write output file");
-            res = SZ_ERROR_FAIL;
-            break;
-          }
-          
-          if (File_Close(&outFile))
-          {
-            PrintError("can not close output file");
-            res = SZ_ERROR_FAIL;
-            break;
-          }
-          
-          #ifdef USE_WINDOWS_FILE
-          if (SzBitWithVals_Check(&db.Attribs, i))
-            SetFileAttributesW(destPath, db.Attribs.Vals[i]);
-          #endif
-        }
-        PrintLF();
       }
-      ISzAlloc_Free(&allocImp, outBuffer);
+
+      SzArEx_GetFileNameUtf16(&db, i, temp);
+      if (!isDir)
+      {
+          res = SzArEx_Extract(&db, &lookStream.vt, i,
+                               &blockIndex, &outBuffer, &outBufferSize,
+                               &offset, &outSizeProcessed,
+                               &allocImp, &allocTempImp);
+          if (res != SZ_OK)
+              break;
+      }
+
+      CSzFile outFile;
+      size_t processedSize;
+      size_t j;
+      UInt16 *name = temp;
+      const UInt16 *destPath = (const UInt16 *)name;
+
+      for (j = 0; name[j] != 0; j++)
+          if (name[j] == '/')
+          {
+              name[j] = 0;
+              MyCreateDir(name, destDir);
+              name[j] = CHAR_PATH_SEPARATOR;
+          }
+
+      if (isDir)
+      {
+          MyCreateDir(destPath, destDir);
+          PrintLF();
+          continue;
+      }
+      else if (OutFile_OpenUtf16(&outFile, destPath, destDir))
+      {
+          PrintError("can not open output file");
+          res = SZ_ERROR_FAIL;
+          break;
+      }
+
+      processedSize = outSizeProcessed;
+
+      if (File_Write(&outFile, outBuffer + offset, &processedSize) != 0 || processedSize != outSizeProcessed)
+      {
+          PrintError("can not write output file");
+          res = SZ_ERROR_FAIL;
+          break;
+      }
+
+      if (File_Close(&outFile))
+      {
+          PrintError("can not close output file");
+          res = SZ_ERROR_FAIL;
+          break;
+      }
+      PrintLF();
     }
+    ISzAlloc_Free(&allocImp, outBuffer);
   }
 
   SzFree(NULL, temp);
@@ -579,11 +530,10 @@ int MY_CDECL extract7z(char *srcFile, char *destDir)
     UInt64ToStr(res, s, 0);
     PrintError(s);
   }
-  
   return 1;
 }
 
-int MY_CDECL extract7zFromAssets(JNIEnv* env, jobject jAssetsManager, const char* inFile, const char* destDir)
+int extract7zFromAssets(JNIEnv* env, jobject jAssetsManager, const char* inFile, const char* destDir)
 {
     ISzAlloc allocImp;
     ISzAlloc allocTempImp;
@@ -594,24 +544,13 @@ int MY_CDECL extract7zFromAssets(JNIEnv* env, jobject jAssetsManager, const char
     SRes res;
     UInt16 *temp = NULL;
     size_t tempSize = 0;
-    // UInt32 parents[NUM_PARENTS_MAX];
 
     Print("\n7z Decoder " MY_VERSION_CPU " : " MY_COPYRIGHT_DATE "\n\n");
 
-#if defined(_WIN32) && !defined(USE_WINDOWS_FILE) && !defined(UNDER_CE)
-    g_FileCodePage = AreFileApisANSI() ? CP_ACP : CP_OEMCP;
-#endif
-
-
     allocImp = g_Alloc;
     allocTempImp = g_Alloc;
-
-#ifdef UNDER_CE
-    if (InFile_OpenW(&archiveStream.file, L"\test.7z"))
-#else
     AAssetManager *mgr = AAssetManager_fromJava(env, jAssetsManager);
     if (InAssetFile_Open(mgr, &archiveStream.assetFile, inFile))
-#endif
     {
         PrintError("can not open asset file");
         return 1;
@@ -622,7 +561,6 @@ int MY_CDECL extract7zFromAssets(JNIEnv* env, jobject jAssetsManager, const char
     lookStream.buf = NULL;
 
     res = SZ_OK;
-
     {
         lookStream.buf = ISzAlloc_Alloc(&allocImp, kInputBufSize);
         if (!lookStream.buf)
@@ -634,146 +572,105 @@ int MY_CDECL extract7zFromAssets(JNIEnv* env, jobject jAssetsManager, const char
             LookToRead2_Init(&lookStream);
         }
     }
-
     CrcGenerateTable();
-
     SzArEx_Init(&db);
 
     if (res == SZ_OK)
     {
         res = SzArEx_Open(&db, &lookStream.vt, &allocImp, &allocTempImp);
     }
-
     if (res == SZ_OK)
     {
-        int listCommand = 0, testCommand = 0, fullPaths = 1;
+        UInt32 i;
+        /*
+        if you need cache, use these 3 variables.
+        if you use external function, you can make these variable as static.
+        */
+        UInt32 blockIndex = 0xFFFFFFFF; /* it can have any value before first call (if outBuffer = 0) */
+        Byte *outBuffer = 0; /* it must be 0 before first call for each new archive. */
+        size_t outBufferSize = 0;  /* it can have any value before first call (if outBuffer = 0) */
 
-        if (res == SZ_OK)
+        for (i = 0; i < db.NumFiles; i++)
         {
-            UInt32 i;
-
-            /*
-            if you need cache, use these 3 variables.
-            if you use external function, you can make these variable as static.
-            */
-            UInt32 blockIndex = 0xFFFFFFFF; /* it can have any value before first call (if outBuffer = 0) */
-            Byte *outBuffer = 0; /* it must be 0 before first call for each new archive. */
-            size_t outBufferSize = 0;  /* it can have any value before first call (if outBuffer = 0) */
-
-            for (i = 0; i < db.NumFiles; i++)
+            size_t offset = 0;
+            size_t outSizeProcessed = 0;
+            size_t len;
+            unsigned isDir = SzArEx_IsDir(&db, i);
+            len = SzArEx_GetFileNameUtf16(&db, i, NULL);
+            if (len > tempSize)
             {
-                size_t offset = 0;
-                size_t outSizeProcessed = 0;
-                // const CSzFileItem *f = db.Files + i;
-                size_t len;
-                unsigned isDir = SzArEx_IsDir(&db, i);
-                if (listCommand == 0 && isDir && !fullPaths)
-                    continue;
-                len = SzArEx_GetFileNameUtf16(&db, i, NULL);
-                // len = SzArEx_GetFullNameLen(&db, i);
-
-                if (len > tempSize)
+                SzFree(NULL, temp);
+                tempSize = len;
+                temp = (UInt16 *)SzAlloc(NULL, tempSize * sizeof(temp[0]));
+                if (!temp)
                 {
-                    SzFree(NULL, temp);
-                    tempSize = len;
-                    temp = (UInt16 *)SzAlloc(NULL, tempSize * sizeof(temp[0]));
-                    if (!temp)
-                    {
-                        res = SZ_ERROR_MEM;
-                        break;
-                    }
+                    res = SZ_ERROR_MEM;
+                    break;
                 }
-
-                SzArEx_GetFileNameUtf16(&db, i, temp);
-                res = PrintString(temp);
+            }
+            SzArEx_GetFileNameUtf16(&db, i, temp);
+            if (!isDir)
+            {
+                res = SzArEx_Extract(&db, &lookStream.vt, i,
+                                     &blockIndex, &outBuffer, &outBufferSize,
+                                     &offset, &outSizeProcessed,
+                                     &allocImp, &allocTempImp);
                 if (res != SZ_OK)
                     break;
-
-                if (isDir)
-                    Print("/");
-                else
-                {
-                    res = SzArEx_Extract(&db, &lookStream.vt, i,
-                                         &blockIndex, &outBuffer, &outBufferSize,
-                                         &offset, &outSizeProcessed,
-                                         &allocImp, &allocTempImp);
-                    if (res != SZ_OK)
-                        break;
-                }
-
-                if (!testCommand)
-                {
-                    CSzFile outFile;
-                    size_t processedSize;
-                    size_t j;
-                    UInt16 *name = (UInt16 *)temp;
-                    const UInt16 *destPath = (const UInt16 *)name;
-
-                    for (j = 0; name[j] != 0; j++)
-                        if (name[j] == '/')
-                        {
-                            if (fullPaths)
-                            {
-                                name[j] = 0;
-                                MyCreateDir(name, destDir);
-                                name[j] = CHAR_PATH_SEPARATOR;
-                            }
-                            else
-                                destPath = name + j + 1;
-                        }
-
-                    if (isDir)
-                    {
-                        MyCreateDir(destPath, destDir);
-                        PrintLF();
-                        continue;
-                    }
-                    else if (OutFile_OpenUtf16(&outFile, destPath, destDir))
-                    {
-                        PrintError("can not open output file");
-                        res = SZ_ERROR_FAIL;
-                        break;
-                    }
-
-                    processedSize = outSizeProcessed;
-
-                    if (File_Write(&outFile, outBuffer + offset, &processedSize) != 0 || processedSize != outSizeProcessed)
-                    {
-                        PrintError("can not write output file");
-                        res = SZ_ERROR_FAIL;
-                        break;
-                    }
-
-                    if (AssetFile_Close(&outFile))
-                    {
-                        PrintError("can not close output file");
-                        res = SZ_ERROR_FAIL;
-                        break;
-                    }
-
-#ifdef USE_WINDOWS_FILE
-                    if (SzBitWithVals_Check(&db.Attribs, i))
-            SetFileAttributesW(destPath, db.Attribs.Vals[i]);
-#endif
-                }
-                PrintLF();
             }
-            ISzAlloc_Free(&allocImp, outBuffer);
-        }
-    }
 
+            CSzFile outFile;
+            size_t processedSize;
+            size_t j;
+            UInt16 *name = temp;
+            const UInt16 *destPath = (const UInt16 *)name;
+
+            for (j = 0; name[j] != 0; j++)
+            {
+                if (name[j] == '/')
+                {
+                    name[j] = 0;
+                    MyCreateDir(name, destDir);
+                    name[j] = CHAR_PATH_SEPARATOR;
+                }
+            }
+            if (isDir)
+            {
+                MyCreateDir(destPath, destDir);
+                continue;
+            }
+            else if (OutFile_OpenUtf16(&outFile, destPath, destDir))
+            {
+                PrintError("can not open output file");
+                res = SZ_ERROR_FAIL;
+                break;
+            }
+            processedSize = outSizeProcessed;
+            if (File_Write(&outFile, outBuffer + offset, &processedSize) != 0 || processedSize != outSizeProcessed)
+            {
+                PrintError("can not write output file");
+                res = SZ_ERROR_FAIL;
+                break;
+            }
+
+            if (File_Close(&outFile))
+            {
+                PrintError("can not close output file");
+                res = SZ_ERROR_FAIL;
+                break;
+            }
+        }
+        ISzAlloc_Free(&allocImp, outBuffer);
+    }
     SzFree(NULL, temp);
     SzArEx_Free(&db, &allocImp);
     ISzAlloc_Free(&allocImp, lookStream.buf);
-
     AssetFile_Close(&archiveStream.assetFile);
-
     if (res == SZ_OK)
     {
         Print("\nEverything is Ok\n");
         return 0;
     }
-
     if (res == SZ_ERROR_UNSUPPORTED)
         PrintError("decoder doesn't support this archive");
     else if (res == SZ_ERROR_MEM)
@@ -786,6 +683,5 @@ int MY_CDECL extract7zFromAssets(JNIEnv* env, jobject jAssetsManager, const char
         UInt64ToStr(res, s, 0);
         PrintError(s);
     }
-
     return 1;
 }
