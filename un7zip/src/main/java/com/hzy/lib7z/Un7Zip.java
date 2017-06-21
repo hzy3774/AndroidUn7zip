@@ -40,6 +40,7 @@ public class Un7Zip {
     }
 
     //JNI interface
+    public static native String getLzmaVersion();
     private static native int un7zip(String filePath, String outPath);
     private static native int un7zipFromAssets(AssetManager assetManager, String filePath, String outPath);
 

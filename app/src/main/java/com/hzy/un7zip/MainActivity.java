@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -15,19 +14,18 @@ import android.widget.Toast;
 
 import com.hzy.lib7z.Un7Zip;
 
-import java.io.File;
-
 public class MainActivity extends AppCompatActivity {
 
     private String filePath;
     private String outPath;
     private TextView textPath;
+    private TextView textVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        outPath = Environment.getExternalStorageDirectory().getPath() + File.separator + "extracted";
+        outPath = getExternalFilesDir("extracted").getPath();
         findViewById(R.id.button_choose_file).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -57,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         textPath = (TextView) findViewById(R.id.text_file_path);
+        textVersion = (TextView) findViewById(R.id.text_7z_version);
+        textVersion.setText(Un7Zip.getLzmaVersion());
     }
 
     private void startExtractFile() {
