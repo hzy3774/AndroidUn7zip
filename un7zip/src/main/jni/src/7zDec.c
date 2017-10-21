@@ -528,7 +528,7 @@ static SRes SzFolder_Decode2(const CSzFolder *folder,
             break;
           }
           CASE_BRA_CONV(PPC)
-//          CASE_BRA_CONV(IA64)
+          CASE_BRA_CONV(IA64)
           CASE_BRA_CONV(SPARC)
           CASE_BRA_CONV(ARM)
           CASE_BRA_CONV(ARMT)

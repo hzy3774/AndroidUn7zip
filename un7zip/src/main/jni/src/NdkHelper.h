@@ -7,7 +7,7 @@
 
 #include <jni.h>
 
-#ifdef NDK_DEBUG
+#ifdef NATIVE_LOG
 #define LOG_TAG "jniLog"
 #include <android/log.h>
 

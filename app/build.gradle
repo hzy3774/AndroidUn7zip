@@ -1,41 +1,42 @@
-apply plugin: "com.android.model.application"
+apply plugin: 'com.android.application'
 
-model {
-    android {
-        compileSdkVersion 25
-        buildToolsVersion "25.0.0"
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
 
-        defaultConfig {
-            applicationId "com.hzy.un7zip"
-            minSdkVersion.apiLevel 15
-            targetSdkVersion.apiLevel 25
-            versionCode 1
-            versionName "1.0"
-        }
-    }
-
-    android.signingConfigs {
-        create("release") {
+    signingConfigs {
+        demokey {
             storeFile file('demokey.jks')
-            storePassword 'demokey'
+            storePassword "demokey"
             keyAlias 'demokey'
             keyPassword 'demokey'
         }
     }
-
-    android.buildTypes {
+    defaultConfig {
+        applicationId "com.hzy.un7zip"
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.demokey
+        }
         release {
-            useProguard true
-            proguardFiles.add(file('proguard-rules.pro'))
-            signingConfig = $("android.signingConfigs.release")
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.demokey
         }
     }
-
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:25.0.1'
-    compile project(':un7zip')
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    debugCompile project(path: ':un7zip', configuration: 'debug')
+    releaseCompile project(path: ':un7zip', configuration: 'release')
 }
+

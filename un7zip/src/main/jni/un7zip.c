@@ -8,7 +8,7 @@ extract7zFromAssets(JNIEnv *env, jobject jAssetsManager, const char *inFile, con
 
 JNIEXPORT jstring JNICALL
 Java_com_hzy_lib7z_Un7Zip_getLzmaVersion(JNIEnv *env, jclass type) {
-    return (*env)->NewStringUTF(env, MY_VERSION);
+    return (*env)->NewStringUTF(env, MY_VERSION_CPU);
 }
 
 JNIEXPORT jint JNICALL

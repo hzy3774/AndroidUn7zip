@@ -4,6 +4,7 @@ model {
     android {
         compileSdkVersion 25
         buildToolsVersion "25.0.3"
+        publishNonDefault true
 
         defaultConfig {
             minSdkVersion.apiLevel 15
@@ -22,7 +23,7 @@ model {
     android.buildTypes {
         debug {
             ndk {
-                CFlags.add('-DNDK_DEBUG')
+                CFlags.add("-DNATIVE_LOG")
             }
         }
         release {
