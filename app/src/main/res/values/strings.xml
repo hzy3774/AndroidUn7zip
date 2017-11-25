@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">AndroidUn7zip</string>
+    <string name="app_name">Un7zip</string>
+    <string name="no_7z_file_selected">No 7z file selected</string>
+    <string name="choose_file">Choose File</string>
+    <string name="extract_7zip">Extract 7zip</string>
+    <string name="extract_7zip_from_assets">Extract 7zip From Assets</string>
+    <string name="version">7zip Version:</string>
+    <string name="input_file">Input File:</string>
+    <string name="output_path">Output Path:</string>
 </resources>

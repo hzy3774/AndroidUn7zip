@@ -1,33 +1,34 @@
-#include <jni.h>
+#include "ndk-helper.h"
 #include "src/7zVersion.h"
+#include "7zExtracter.h"
 
-int extract7z(const char *srcFile, const char *destDir);
+#define FUNC(f) Java_com_hzy_lib7z_Z7Extractor_##f
 
-int
-extract7zFromAssets(JNIEnv *env, jobject jAssetsManager, const char *inFile, const char *destDir);
 
 JNIEXPORT jstring JNICALL
-Java_com_hzy_lib7z_Un7Zip_getLzmaVersion(JNIEnv *env, jclass type) {
-    return (*env)->NewStringUTF(env, MY_VERSION_CPU);
+FUNC(nGetLzmaVersion)(JNIEnv *env, jclass type) {
+    return (*env)->NewStringUTF(env, MY_VERSION_COPYRIGHT_DATE);
 }
 
-JNIEXPORT jint JNICALL
-Java_com_hzy_lib7z_Un7Zip_un7zip(JNIEnv *env, jclass type, jstring filePath_, jstring outPath_) {
+JNIEXPORT jboolean JNICALL
+FUNC(nExtractFile)(JNIEnv *env, jclass type, jstring filePath_,
+                   jstring outPath_, jobject callback, jlong inBufSize) {
     const char *filePath = (*env)->GetStringUTFChars(env, filePath_, 0);
     const char *outPath = (*env)->GetStringUTFChars(env, outPath_, 0);
-    jint ret = extract7z(filePath, outPath);
+    jboolean res = extractFile(env, filePath, outPath, callback, inBufSize);
     (*env)->ReleaseStringUTFChars(env, filePath_, filePath);
     (*env)->ReleaseStringUTFChars(env, outPath_, outPath);
-    return ret;
+    return res;
 }
 
-JNIEXPORT jint JNICALL
-Java_com_hzy_lib7z_Un7Zip_un7zipFromAssets(JNIEnv *env, jclass type, jobject assetManager,
-                                           jstring filePath_, jstring outPath_) {
-    const char *filePath = (*env)->GetStringUTFChars(env, filePath_, 0);
+JNIEXPORT jboolean JNICALL
+FUNC(nExtractAsset)(JNIEnv *env, jclass type, jobject assetManager,
+                    jstring fileName_, jstring outPath_, jobject callback,
+                    jlong inBufSize) {
+    const char *fileName = (*env)->GetStringUTFChars(env, fileName_, 0);
     const char *outPath = (*env)->GetStringUTFChars(env, outPath_, 0);
-    jint ret = extract7zFromAssets(env, assetManager, filePath, outPath);
-    (*env)->ReleaseStringUTFChars(env, filePath_, filePath);
+    jboolean res = extractAsset(env, assetManager, fileName, outPath, callback, inBufSize);
+    (*env)->ReleaseStringUTFChars(env, fileName_, fileName);
     (*env)->ReleaseStringUTFChars(env, outPath_, outPath);
-    return ret;
+    return res;
 }

@@ -1,7 +1,3 @@
-//
-// Created by hzy on 17-6-13.
-//
-
 #ifndef ANDROIDUN7ZIP_NDKHELPER_H
 #define ANDROIDUN7ZIP_NDKHELPER_H
 
@@ -9,6 +5,7 @@
 
 #ifdef NATIVE_LOG
 #define LOG_TAG "jniLog"
+
 #include <android/log.h>
 
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
@@ -24,4 +21,4 @@
 #define LOGF(...) do{}while(0)
 #endif
 
-#endif //ANDROIDUN7ZIP_NDKHELPER_H
+#endif
