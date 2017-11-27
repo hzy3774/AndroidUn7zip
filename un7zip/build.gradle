@@ -9,8 +9,8 @@ model {
         defaultConfig {
             minSdkVersion.apiLevel 15
             targetSdkVersion.apiLevel 25
-            versionCode 2
-            versionName "1.1.0"
+            versionCode 3
+            versionName "1.3.0"
         }
 
         ndk {
