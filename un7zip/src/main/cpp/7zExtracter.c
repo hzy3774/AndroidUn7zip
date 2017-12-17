@@ -39,6 +39,7 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
     UInt16 *temp = NULL;
     size_t tempSize = 0;
 
+    LOGD("Stream In Buffer Size:[0X%lX]", inBufSize);
     LookToRead2_CreateVTable(&lookStream, False);
     lookStream.buf = NULL;
     res = SZ_OK;
