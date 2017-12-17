@@ -1,34 +1,36 @@
-apply plugin: 'com.android.model.library'
+apply plugin: 'com.android.library'
 
-model {
-    android {
-        compileSdkVersion 25
-        buildToolsVersion "25.0.3"
-        publishNonDefault true
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
+    publishNonDefault true
 
-        defaultConfig {
-            minSdkVersion.apiLevel 15
-            targetSdkVersion.apiLevel 25
-            versionCode 2
-            versionName "1.1.0"
-        }
-
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 3
+        versionName "1.2.0"
         ndk {
-            moduleName "un7zip"
-            ldLibs.addAll(["log", "android"])
-            abiFilters.addAll(['armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'])
+            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86'
         }
-    }
-
-    android.buildTypes {
-        debug {
-            ndk {
-                CFlags.add("-DNATIVE_LOG")
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_PLATFORM=android-18'
             }
         }
-        release {
-            minifyEnabled false
-            proguardFiles.add(file("proguard-rules.pro"))
+    }
+    buildTypes {
+        debug {
+            externalNativeBuild {
+                cmake {
+                    cFlags.add('-DNATIVE_LOG')
+                }
+            }
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path 'src/main/cpp/CMakeLists.txt'
         }
     }
 }
