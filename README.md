@@ -18,6 +18,12 @@ boolean extractAsset(assetManager, fileName, outPath, callback);
 String getLzmaVersion();
 ```
 
+#### ProGuard
+If you are using ProGuard you might need to add the following options:
+```
+-keep class com.hzy.lib7z.** { *; }
+```
+
 ### Fetures
 * easily extract 7z from file
 * directly extract 7z from assets
