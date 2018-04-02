@@ -17,15 +17,4 @@ public abstract class ExtractCallback implements IExtractCallback {
     @Override
     public void onSucceed() {
     }
-
-    public static ExtractCallback EMPTY_CALLBACK = new ExtractCallback() {
-
-        @Override
-        public void onProgress(String name, long size) {
-        }
-
-        @Override
-        public void onError(int errorCode, String message) {
-        }
-    };
 }

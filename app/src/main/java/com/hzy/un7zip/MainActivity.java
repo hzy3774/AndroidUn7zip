@@ -90,6 +90,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * start to select some file
+     */
     @OnClick(R.id.button_choose_file)
     public void onMButtonChooseFileClicked() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -98,6 +101,9 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, 1);
     }
 
+    /**
+     * start to extract from selected file
+     */
     @OnClick(R.id.button_extract)
     public void onMButtonExtractClicked() {
         if (TextUtils.isEmpty(mInputFilePath)) {
@@ -113,6 +119,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * request for some read storage permission for android 6.0+
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -124,6 +133,9 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    /**
+     * real extract process
+     */
     private void doExtractFile() {
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.show();
@@ -166,6 +178,9 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * extract some files from assets
+     */
     @OnClick(R.id.button_extract_asset)
     public void onMButtonExtractAssetClicked() {
         mProgressDialog = new ProgressDialog(this);
