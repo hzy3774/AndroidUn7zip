@@ -170,7 +170,7 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
 /**
  * extract all from 7z
  */
-jboolean extractFile(JNIEnv *env, const char *srcFile, const char *destDir, jobject callback,
+jint extractFile(JNIEnv *env, const char *srcFile, const char *destDir, jobject callback,
                      jlong inBufSize) {
     jmethodID onStart = NULL;
     jmethodID onError = NULL;
@@ -185,7 +185,7 @@ jboolean extractFile(JNIEnv *env, const char *srcFile, const char *destDir, jobj
     CallJavaVoidMethod(env, callback, onStart);
     if (InFile_Open(&archiveStream.file, srcFile)) {
         CallJavaIntStringMethod(env, callback, onError, SZ_ERROR_ARCHIVE, "Input File Open Error");
-        return JNI_FALSE;
+        return SZ_ERROR_ARCHIVE;
     }
     FileInStream_CreateVTable(&archiveStream);
     SRes res = extractStream(env, &archiveStream.vt, destDir, OPTION_EXTRACT, callback,
@@ -193,15 +193,14 @@ jboolean extractFile(JNIEnv *env, const char *srcFile, const char *destDir, jobj
     File_Close(&archiveStream.file);
     if (res == SZ_OK) {
         CallJavaVoidMethod(env, callback, onSucceed);
-        return JNI_TRUE;
     }
-    return JNI_FALSE;
+    return res;
 }
 
 /**
  * extract from assets
  */
-jboolean extractAsset(JNIEnv *env, jobject assetsManager, const char *assetName,
+jint extractAsset(JNIEnv *env, jobject assetsManager, const char *assetName,
                       const char *destDir, jobject callback, jlong inBufSize) {
     jmethodID onStart = NULL;
     jmethodID onError = NULL;
@@ -217,7 +216,7 @@ jboolean extractAsset(JNIEnv *env, jobject assetsManager, const char *assetName,
     AAssetManager *mgr = AAssetManager_fromJava(env, assetsManager);
     if (InAssetFile_Open(mgr, &archiveStream.assetFile, assetName)) {
         CallJavaIntStringMethod(env, callback, onError, SZ_ERROR_ARCHIVE, "Asset Open Error");
-        return JNI_FALSE;
+        return SZ_ERROR_ARCHIVE;
     }
     AssetFileInStream_CreateVTable(&archiveStream);
     SRes res = extractStream(env, &archiveStream.vt, destDir, OPTION_EXTRACT, callback,
@@ -225,8 +224,7 @@ jboolean extractAsset(JNIEnv *env, jobject assetsManager, const char *assetName,
     AssetFile_Close(&archiveStream.assetFile);
     if (res == SZ_OK) {
         CallJavaVoidMethod(env, callback, onSucceed);
-        return JNI_TRUE;
     }
-    return JNI_FALSE;
+    return res;
 }
 

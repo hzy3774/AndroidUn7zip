@@ -10,7 +10,7 @@ FUNC(nGetLzmaVersion)(JNIEnv *env, jclass type) {
     return (*env)->NewStringUTF(env, MY_VERSION_COPYRIGHT_DATE);
 }
 
-JNIEXPORT jboolean JNICALL
+JNIEXPORT jint JNICALL
 FUNC(nExtractFile)(JNIEnv *env, jclass type, jstring filePath_,
                    jstring outPath_, jobject callback, jlong inBufSize) {
     const char *filePath = (*env)->GetStringUTFChars(env, filePath_, 0);
@@ -21,7 +21,7 @@ FUNC(nExtractFile)(JNIEnv *env, jclass type, jstring filePath_,
     return res;
 }
 
-JNIEXPORT jboolean JNICALL
+JNIEXPORT jint JNICALL
 FUNC(nExtractAsset)(JNIEnv *env, jclass type, jobject assetManager,
                     jstring fileName_, jstring outPath_, jobject callback,
                     jlong inBufSize) {
