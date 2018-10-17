@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <string.h>
+#include <stdbool.h>
 #include "7zFunctions.h"
 #include "src/7zAlloc.h"
 #include "ndk-helper.h"
@@ -21,11 +22,14 @@
 #define PERIOD_4 (4 * 365 + 1)
 #define PERIOD_100 (PERIOD_4 * 25 - 1)
 #define PERIOD_400 (PERIOD_100 * 4 + 1)
+#define DEBUG_LOG false
 
 static const ISzAlloc g_Alloc = {SzAlloc, SzFree};
 
 void Print(const char *s) {
-    LOGD("%s", s);
+    if (DEBUG_LOG) {
+        LOGD("%s", s);
+    }
 }
 
 void PrintError(const char *s) {
