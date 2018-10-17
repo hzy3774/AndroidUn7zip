@@ -31,8 +31,7 @@ public class Z7Extractor {
      * @return status
      */
     public static boolean extractFile(String filePath, String outPath,
-                                      ExtractCallback callback) {
-        callback = callback == null ? new DefalutExtractCallback() : callback;
+                                      IExtractCallback callback) {
         File inputFile = new File(filePath);
         if (TextUtils.isEmpty(filePath) || !inputFile.exists() ||
                 TextUtils.isEmpty(outPath) || !prepareOutPath(outPath)) {
@@ -52,8 +51,7 @@ public class Z7Extractor {
      * @return status
      */
     public static boolean extractAsset(AssetManager assetManager, String fileName,
-                                       String outPath, ExtractCallback callback) {
-        callback = callback == null ? new DefalutExtractCallback() : callback;
+                                       String outPath, IExtractCallback callback) {
         if (TextUtils.isEmpty(fileName) || TextUtils.isEmpty(outPath) || !prepareOutPath(outPath)) {
             callback.onError(ErrorCode.ERROR_CODE_PATH_ERROR, "File Path Error!");
             return false;
@@ -77,11 +75,11 @@ public class Z7Extractor {
     }
 
     private static native boolean nExtractFile(String filePath, String outPath,
-                                               ExtractCallback callback, long inBufSize);
+                                               IExtractCallback callback, long inBufSize);
 
     private static native boolean nExtractAsset(AssetManager assetManager,
                                                 String fileName, String outPath,
-                                                ExtractCallback callback, long inBufSize);
+                                                IExtractCallback callback, long inBufSize);
 
     private static native String nGetLzmaVersion();
 
