@@ -252,27 +252,37 @@ void GetAttribString(UInt32 wa, Bool isDir, char *s) {
 }
 
 void CallJavaVoidMethod(JNIEnv *env, jobject obj, jmethodID id) {
-    (*env)->CallVoidMethod(env, obj, id);
+    if (id != NULL) {
+        (*env)->CallVoidMethod(env, obj, id);
+    }
 }
 
 void CallJavaIntMethod(JNIEnv *env, jobject obj, jmethodID id, jint param) {
-    (*env)->CallVoidMethod(env, obj, id, param);
+    if (id != NULL) {
+        (*env)->CallVoidMethod(env, obj, id, param);
+    }
 }
 
 void CallJavaStringMethod(JNIEnv *env, jobject obj, jmethodID id, char *param) {
-    jstring jparam = (*env)->NewStringUTF(env, param);
-    (*env)->CallVoidMethod(env, obj, id, jparam);
-    (*env)->DeleteLocalRef(env, jparam);
+    if (id != NULL) {
+        jstring jparam = (*env)->NewStringUTF(env, param);
+        (*env)->CallVoidMethod(env, obj, id, jparam);
+        (*env)->DeleteLocalRef(env, jparam);
+    }
 }
 
 void CallJavaIntStringMethod(JNIEnv *env, jobject obj, jmethodID id, int param1, char *param2) {
-    jstring jparam = (*env)->NewStringUTF(env, param2);
-    (*env)->CallVoidMethod(env, obj, id, param1, jparam);
-    (*env)->DeleteLocalRef(env, jparam);
+    if (id != NULL) {
+        jstring jparam = (*env)->NewStringUTF(env, param2);
+        (*env)->CallVoidMethod(env, obj, id, param1, jparam);
+        (*env)->DeleteLocalRef(env, jparam);
+    }
 }
 
 void CallJavaStringLongMethod(JNIEnv *env, jobject obj, jmethodID id, char* param1, jlong param2) {
-    jstring jparam = (*env)->NewStringUTF(env, param1);
-    (*env)->CallVoidMethod(env, obj, id, jparam, param2);
-    (*env)->DeleteLocalRef(env, jparam);
+    if (id != NULL) {
+        jstring jparam = (*env)->NewStringUTF(env, param1);
+        (*env)->CallVoidMethod(env, obj, id, jparam, param2);
+        (*env)->DeleteLocalRef(env, jparam);
+    }
 }
