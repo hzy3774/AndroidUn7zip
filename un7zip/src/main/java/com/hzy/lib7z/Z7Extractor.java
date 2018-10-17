@@ -35,7 +35,9 @@ public class Z7Extractor {
         File inputFile = new File(filePath);
         if (TextUtils.isEmpty(filePath) || !inputFile.exists() ||
                 TextUtils.isEmpty(outPath) || !prepareOutPath(outPath)) {
-            callback.onError(ErrorCode.ERROR_CODE_PATH_ERROR, "File Path Error!");
+            if (callback != null) {
+                callback.onError(ErrorCode.ERROR_CODE_PATH_ERROR, "File Path Error!");
+            }
             return ErrorCode.ERROR_CODE_PATH_ERROR;
         }
         return nExtractFile(filePath, outPath, callback, DEFAULT_IN_BUF_SIZE);
@@ -53,7 +55,9 @@ public class Z7Extractor {
     public static int extractAsset(AssetManager assetManager, String fileName,
                                        String outPath, IExtractCallback callback) {
         if (TextUtils.isEmpty(fileName) || TextUtils.isEmpty(outPath) || !prepareOutPath(outPath)) {
-            callback.onError(ErrorCode.ERROR_CODE_PATH_ERROR, "File Path Error!");
+            if (callback != null) {
+                callback.onError(ErrorCode.ERROR_CODE_PATH_ERROR, "File Path Error!");
+            }
             return ErrorCode.ERROR_CODE_PATH_ERROR;
         }
         return nExtractAsset(assetManager, fileName, outPath, callback, DEFAULT_IN_BUF_SIZE);
