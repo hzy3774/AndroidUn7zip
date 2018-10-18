@@ -20,7 +20,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.hzy.lib7z.ExtractCallback;
+import com.hzy.lib7z.IExtractCallback;
 import com.hzy.lib7z.Z7Extractor;
 
 import java.io.File;
@@ -142,7 +142,17 @@ public class MainActivity extends AppCompatActivity {
         Flowable.create(new FlowableOnSubscribe<MsgInfo>() {
             @Override
             public void subscribe(final FlowableEmitter<MsgInfo> e) throws Exception {
-                Z7Extractor.extractFile(mInputFilePath, mOutputPath, new ExtractCallback() {
+                Z7Extractor.extractFile(mInputFilePath, mOutputPath, new IExtractCallback() {
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onGetFileNum(int fileNum) {
+
+                    }
+
                     @Override
                     public void onProgress(String name, long size) {
                         e.onNext(new MsgInfo(1, "name:" + name + " size: " + size));
@@ -151,6 +161,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onError(int errorCode, String message) {
                         e.onNext(new MsgInfo(2, message));
+                    }
+
+                    @Override
+                    public void onSucceed() {
+
                     }
                 });
                 e.onNext(new MsgInfo(3, "Complete"));
@@ -188,7 +203,17 @@ public class MainActivity extends AppCompatActivity {
         Flowable.create(new FlowableOnSubscribe<MsgInfo>() {
             @Override
             public void subscribe(final FlowableEmitter<MsgInfo> e) throws Exception {
-                Z7Extractor.extractAsset(getAssets(), "TestAsset.7z", mOutputPath, new ExtractCallback() {
+                Z7Extractor.extractAsset(getAssets(), "TestAsset.7z", mOutputPath, new IExtractCallback() {
+                    @Override
+                    public void onStart() {
+
+                    }
+
+                    @Override
+                    public void onGetFileNum(int fileNum) {
+
+                    }
+
                     @Override
                     public void onProgress(String name, long size) {
                         e.onNext(new MsgInfo(1, "name:" + name + " size: " + size));
@@ -197,6 +222,11 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onError(int errorCode, String message) {
                         e.onNext(new MsgInfo(2, message));
+                    }
+
+                    @Override
+                    public void onSucceed() {
+
                     }
                 });
                 e.onNext(new MsgInfo(3, "Complete"));

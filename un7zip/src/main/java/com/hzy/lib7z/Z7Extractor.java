@@ -30,14 +30,15 @@ public class Z7Extractor {
      * @param callback callback
      * @return status
      */
-    public static boolean extractFile(String filePath, String outPath,
-                                      ExtractCallback callback) {
-        callback = callback == null ? new DefalutExtractCallback() : callback;
+    public static int extractFile(String filePath, String outPath,
+                                      IExtractCallback callback) {
         File inputFile = new File(filePath);
         if (TextUtils.isEmpty(filePath) || !inputFile.exists() ||
                 TextUtils.isEmpty(outPath) || !prepareOutPath(outPath)) {
-            callback.onError(ErrorCode.ERROR_CODE_PATH_ERROR, "File Path Error!");
-            return false;
+            if (callback != null) {
+                callback.onError(ErrorCode.ERROR_CODE_PATH_ERROR, "File Path Error!");
+            }
+            return ErrorCode.ERROR_CODE_PATH_ERROR;
         }
         return nExtractFile(filePath, outPath, callback, DEFAULT_IN_BUF_SIZE);
     }
@@ -51,12 +52,13 @@ public class Z7Extractor {
      * @param callback     callback
      * @return status
      */
-    public static boolean extractAsset(AssetManager assetManager, String fileName,
-                                       String outPath, ExtractCallback callback) {
-        callback = callback == null ? new DefalutExtractCallback() : callback;
+    public static int extractAsset(AssetManager assetManager, String fileName,
+                                       String outPath, IExtractCallback callback) {
         if (TextUtils.isEmpty(fileName) || TextUtils.isEmpty(outPath) || !prepareOutPath(outPath)) {
-            callback.onError(ErrorCode.ERROR_CODE_PATH_ERROR, "File Path Error!");
-            return false;
+            if (callback != null) {
+                callback.onError(ErrorCode.ERROR_CODE_PATH_ERROR, "File Path Error!");
+            }
+            return ErrorCode.ERROR_CODE_PATH_ERROR;
         }
         return nExtractAsset(assetManager, fileName, outPath, callback, DEFAULT_IN_BUF_SIZE);
     }
@@ -76,12 +78,12 @@ public class Z7Extractor {
         return outDir.exists() && outDir.isDirectory();
     }
 
-    private static native boolean nExtractFile(String filePath, String outPath,
-                                               ExtractCallback callback, long inBufSize);
+    private static native int nExtractFile(String filePath, String outPath,
+                                               IExtractCallback callback, long inBufSize);
 
-    private static native boolean nExtractAsset(AssetManager assetManager,
+    private static native int nExtractAsset(AssetManager assetManager,
                                                 String fileName, String outPath,
-                                                ExtractCallback callback, long inBufSize);
+                                                IExtractCallback callback, long inBufSize);
 
     private static native String nGetLzmaVersion();
 

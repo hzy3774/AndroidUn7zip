@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <string.h>
+#include <stdbool.h>
 #include "7zFunctions.h"
 #include "src/7zAlloc.h"
 #include "ndk-helper.h"
@@ -21,11 +22,14 @@
 #define PERIOD_4 (4 * 365 + 1)
 #define PERIOD_100 (PERIOD_4 * 25 - 1)
 #define PERIOD_400 (PERIOD_100 * 4 + 1)
+#define DEBUG_LOG false
 
 static const ISzAlloc g_Alloc = {SzAlloc, SzFree};
 
 void Print(const char *s) {
-    LOGD("%s", s);
+    if (DEBUG_LOG) {
+        LOGD("%s", s);
+    }
 }
 
 void PrintError(const char *s) {
@@ -252,27 +256,37 @@ void GetAttribString(UInt32 wa, Bool isDir, char *s) {
 }
 
 void CallJavaVoidMethod(JNIEnv *env, jobject obj, jmethodID id) {
-    (*env)->CallVoidMethod(env, obj, id);
+    if (id != NULL) {
+        (*env)->CallVoidMethod(env, obj, id);
+    }
 }
 
 void CallJavaIntMethod(JNIEnv *env, jobject obj, jmethodID id, jint param) {
-    (*env)->CallVoidMethod(env, obj, id, param);
+    if (id != NULL) {
+        (*env)->CallVoidMethod(env, obj, id, param);
+    }
 }
 
 void CallJavaStringMethod(JNIEnv *env, jobject obj, jmethodID id, char *param) {
-    jstring jparam = (*env)->NewStringUTF(env, param);
-    (*env)->CallVoidMethod(env, obj, id, jparam);
-    (*env)->DeleteLocalRef(env, jparam);
+    if (id != NULL) {
+        jstring jparam = (*env)->NewStringUTF(env, param);
+        (*env)->CallVoidMethod(env, obj, id, jparam);
+        (*env)->DeleteLocalRef(env, jparam);
+    }
 }
 
 void CallJavaIntStringMethod(JNIEnv *env, jobject obj, jmethodID id, int param1, char *param2) {
-    jstring jparam = (*env)->NewStringUTF(env, param2);
-    (*env)->CallVoidMethod(env, obj, id, param1, jparam);
-    (*env)->DeleteLocalRef(env, jparam);
+    if (id != NULL) {
+        jstring jparam = (*env)->NewStringUTF(env, param2);
+        (*env)->CallVoidMethod(env, obj, id, param1, jparam);
+        (*env)->DeleteLocalRef(env, jparam);
+    }
 }
 
 void CallJavaStringLongMethod(JNIEnv *env, jobject obj, jmethodID id, char* param1, jlong param2) {
-    jstring jparam = (*env)->NewStringUTF(env, param1);
-    (*env)->CallVoidMethod(env, obj, id, jparam, param2);
-    (*env)->DeleteLocalRef(env, jparam);
+    if (id != NULL) {
+        jstring jparam = (*env)->NewStringUTF(env, param1);
+        (*env)->CallVoidMethod(env, obj, id, jparam, param2);
+        (*env)->DeleteLocalRef(env, jparam);
+    }
 }

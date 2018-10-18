@@ -23,13 +23,16 @@ static const ISzAlloc g_Alloc = {SzAlloc, SzFree};
 static SRes
 extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
               const int options, jobject callback, size_t inBufSize) {
-    jclass callbackClass = (*env)->GetObjectClass(env, callback);
-    jmethodID onGetFileNum =
-            (*env)->GetMethodID(env, callbackClass, "onGetFileNum", "(I)V");
-    jmethodID onError =
-            (*env)->GetMethodID(env, callbackClass, "onError", "(ILjava/lang/String;)V");
-    jmethodID onProgress =
-            (*env)->GetMethodID(env, callbackClass, "onProgress", "(Ljava/lang/String;J)V");
+
+    jmethodID onGetFileNum = NULL;
+    jmethodID onError = NULL;
+    jmethodID onProgress = NULL;
+    if (callback != NULL) {
+        jclass callbackClass = (*env)->GetObjectClass(env, callback);
+        onGetFileNum = (*env)->GetMethodID(env, callbackClass, "onGetFileNum", "(I)V");
+        onError = (*env)->GetMethodID(env, callbackClass, "onError", "(ILjava/lang/String;)V");
+        onProgress = (*env)->GetMethodID(env, callbackClass, "onProgress", "(Ljava/lang/String;J)V");
+    }
 
     ISzAlloc allocImp = g_Alloc;
     ISzAlloc allocTempImp = g_Alloc;
@@ -167,21 +170,22 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
 /**
  * extract all from 7z
  */
-jboolean extractFile(JNIEnv *env, const char *srcFile, const char *destDir, jobject callback,
+jint extractFile(JNIEnv *env, const char *srcFile, const char *destDir, jobject callback,
                      jlong inBufSize) {
-    jclass callbackClass = (*env)->GetObjectClass(env, callback);
-    jmethodID onStart =
-            (*env)->GetMethodID(env, callbackClass, "onStart", "()V");
-    jmethodID onError =
-            (*env)->GetMethodID(env, callbackClass, "onError", "(ILjava/lang/String;)V");
-    jmethodID onSucceed =
-            (*env)->GetMethodID(env, callbackClass, "onSucceed", "()V");
-
+    jmethodID onStart = NULL;
+    jmethodID onError = NULL;
+    jmethodID onSucceed = NULL;
+    if (callback != NULL) {
+        jclass  callbackClass = (*env)->GetObjectClass(env, callback);
+        onStart = (*env)->GetMethodID(env, callbackClass, "onStart", "()V");
+        onError = (*env)->GetMethodID(env, callbackClass, "onError", "(ILjava/lang/String;)V");
+        onSucceed = (*env)->GetMethodID(env, callbackClass, "onSucceed", "()V");
+    }
     CFileInStream archiveStream;
     CallJavaVoidMethod(env, callback, onStart);
     if (InFile_Open(&archiveStream.file, srcFile)) {
         CallJavaIntStringMethod(env, callback, onError, SZ_ERROR_ARCHIVE, "Input File Open Error");
-        return JNI_FALSE;
+        return SZ_ERROR_ARCHIVE;
     }
     FileInStream_CreateVTable(&archiveStream);
     SRes res = extractStream(env, &archiveStream.vt, destDir, OPTION_EXTRACT, callback,
@@ -189,30 +193,30 @@ jboolean extractFile(JNIEnv *env, const char *srcFile, const char *destDir, jobj
     File_Close(&archiveStream.file);
     if (res == SZ_OK) {
         CallJavaVoidMethod(env, callback, onSucceed);
-        return JNI_TRUE;
     }
-    return JNI_FALSE;
+    return res;
 }
 
 /**
  * extract from assets
  */
-jboolean extractAsset(JNIEnv *env, jobject assetsManager, const char *assetName,
+jint extractAsset(JNIEnv *env, jobject assetsManager, const char *assetName,
                       const char *destDir, jobject callback, jlong inBufSize) {
-    jclass callbackClass = (*env)->GetObjectClass(env, callback);
-    jmethodID onStart =
-            (*env)->GetMethodID(env, callbackClass, "onStart", "()V");
-    jmethodID onError =
-            (*env)->GetMethodID(env, callbackClass, "onError", "(ILjava/lang/String;)V");
-    jmethodID onSucceed =
-            (*env)->GetMethodID(env, callbackClass, "onSucceed", "()V");
-
+    jmethodID onStart = NULL;
+    jmethodID onError = NULL;
+    jmethodID onSucceed = NULL;
+    if (callback != NULL) {
+        jclass  callbackClass = (*env)->GetObjectClass(env, callback);
+        onStart = (*env)->GetMethodID(env, callbackClass, "onStart", "()V");
+        onError = (*env)->GetMethodID(env, callbackClass, "onError", "(ILjava/lang/String;)V");
+        onSucceed = (*env)->GetMethodID(env, callbackClass, "onSucceed", "()V");
+    }
     CAssetFileInStream archiveStream;
     CallJavaVoidMethod(env, callback, onStart);
     AAssetManager *mgr = AAssetManager_fromJava(env, assetsManager);
     if (InAssetFile_Open(mgr, &archiveStream.assetFile, assetName)) {
         CallJavaIntStringMethod(env, callback, onError, SZ_ERROR_ARCHIVE, "Asset Open Error");
-        return JNI_FALSE;
+        return SZ_ERROR_ARCHIVE;
     }
     AssetFileInStream_CreateVTable(&archiveStream);
     SRes res = extractStream(env, &archiveStream.vt, destDir, OPTION_EXTRACT, callback,
@@ -220,8 +224,7 @@ jboolean extractAsset(JNIEnv *env, jobject assetsManager, const char *assetName,
     AssetFile_Close(&archiveStream.assetFile);
     if (res == SZ_OK) {
         CallJavaVoidMethod(env, callback, onSucceed);
-        return JNI_TRUE;
     }
-    return JNI_FALSE;
+    return res;
 }
 
