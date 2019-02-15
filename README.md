@@ -1,15 +1,41 @@
 AndroidUn7zip(安卓7zip解压)
 ==================
-A simple library with lzma sdk for 7z extraction.
+A simple library with lzma sdk for 7z extraction.(使用LZMA SDK解压7z压缩包)
+
+[![auc][aucSvg]][auc] [![api][apiSvg]][api]
+
+[aucSvg]: https://img.shields.io/badge/AndroidUn7zip-v1.4.0-brightgreen.svg
+[auc]: https://github.com/hzy3774/AndroidUn7zip
+
+[apiSvg]: https://img.shields.io/badge/API-14+-brightgreen.svg
+[api]: https://android-arsenal.com/api?level=14
 
 ### Introduction
+* 官方网站：https://www.7-zip.org/sdk.html
+* 7z is the new archive format, providing high compression ratio.
+
 
 #### Begin To Use
+* Add gradle dependencie:
 ```gradle
 dependencies {
-    compile 'com.hzy:un7zip:1.3.0'
+    implementation 'com.hzy:un7zip:1.4.0'
 }
 ```
+* Or just download the aar [here](https://jcenter.bintray.com/com/hzy/un7zip/)
+* If you want to add some abi filters
+``` gradle
+android {
+    ...
+    defaultConfig {
+        ...
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86'
+         }
+    }
+}
+```
+
 
 #### Java API：
 ```java

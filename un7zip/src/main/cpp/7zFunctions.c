@@ -250,7 +250,7 @@ void ConvertFileTimeToString(const CNtfsFileTime *nt, char *s) {
     s[2] = 0;
 }
 
-void GetAttribString(UInt32 wa, Bool isDir, char *s) {
+void GetAttribString(UInt32 wa, BoolInt isDir, char *s) {
     s[0] = (char) (((wa & (1 << 4)) != 0 || isDir) ? 'D' : '.');
     s[1] = 0;
 }

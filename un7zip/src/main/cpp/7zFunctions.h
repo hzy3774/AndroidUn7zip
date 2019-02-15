@@ -29,7 +29,7 @@ char *UIntToStr(char *s, unsigned value, int numDigits);
 
 void ConvertFileTimeToString(const CNtfsFileTime *nt, char *s);
 
-void GetAttribString(UInt32 wa, Bool isDir, char *s);
+void GetAttribString(UInt32 wa, BoolInt isDir, char *s);
 
 void CallJavaVoidMethod(JNIEnv *env, jobject obj, jmethodID id);
 
