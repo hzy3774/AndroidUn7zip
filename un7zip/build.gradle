@@ -6,11 +6,11 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 5
-        versionName "1.4.0"
-        ndk {
+        versionCode 6
+        versionName "1.5.0"
+        /*ndk {
             abiFilters 'armeabi-v7a'
-        }
+        }*/
         /*externalNativeBuild {
             cmake {
                 arguments '-DANDROID_PLATFORM=android-18'

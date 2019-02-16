@@ -15,8 +15,11 @@ android {
         applicationId "com.hzy.un7zip"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 5
-        versionName "1.4.0"
+        versionCode 6
+        versionName "1.5.0"
+        ndk {
+            abiFilters 'armeabi-v7a'
+        }
     }
     buildTypes {
         debug {
@@ -39,6 +42,6 @@ dependencies {
     //implementation project(':un7zip')
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     testImplementation 'junit:junit:4.12'
-    implementation 'com.hzy:un7zip:1.4.0'
+    implementation 'com.hzy:un7zip:1.5.0'
 }
 

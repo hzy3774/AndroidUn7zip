@@ -15,7 +15,7 @@ FUNC(nExtractFile)(JNIEnv *env, jclass type, jstring filePath_,
                    jstring outPath_, jobject callback, jlong inBufSize) {
     const char *filePath = (*env)->GetStringUTFChars(env, filePath_, 0);
     const char *outPath = (*env)->GetStringUTFChars(env, outPath_, 0);
-    jboolean res = extractFile(env, filePath, outPath, callback, inBufSize);
+    jint res = extractFile(env, filePath, outPath, callback, inBufSize);
     (*env)->ReleaseStringUTFChars(env, filePath_, filePath);
     (*env)->ReleaseStringUTFChars(env, outPath_, outPath);
     return res;
@@ -27,7 +27,7 @@ FUNC(nExtractAsset)(JNIEnv *env, jclass type, jobject assetManager,
                     jlong inBufSize) {
     const char *fileName = (*env)->GetStringUTFChars(env, fileName_, 0);
     const char *outPath = (*env)->GetStringUTFChars(env, outPath_, 0);
-    jboolean res = extractAsset(env, assetManager, fileName, outPath, callback, inBufSize);
+    jint res = extractAsset(env, assetManager, fileName, outPath, callback, inBufSize);
     (*env)->ReleaseStringUTFChars(env, fileName_, fileName);
     (*env)->ReleaseStringUTFChars(env, outPath_, outPath);
     return res;
