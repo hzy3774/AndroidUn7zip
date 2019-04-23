@@ -10,8 +10,8 @@ android {
         versionName "1.5.0"
         /*ndk {
             abiFilters 'armeabi-v7a'
-        }*/
-        /*externalNativeBuild {
+        }
+        externalNativeBuild {
             cmake {
                 arguments '-DANDROID_PLATFORM=android-18'
             }
