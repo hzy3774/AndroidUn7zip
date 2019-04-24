@@ -22,7 +22,7 @@
 #define PERIOD_4 (4 * 365 + 1)
 #define PERIOD_100 (PERIOD_4 * 25 - 1)
 #define PERIOD_400 (PERIOD_100 * 4 + 1)
-#define DEBUG_LOG false
+#define DEBUG_LOG NATIVE_LOG
 
 static const ISzAlloc g_Alloc = {SzAlloc, SzFree};
 
