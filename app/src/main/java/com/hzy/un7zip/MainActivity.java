@@ -8,22 +8,19 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.hzy.lib7z.IExtractCallback;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.blankj.utilcode.util.SnackbarUtils;
 import com.hzy.lib7z.Z7Extractor;
-import com.hzy.un7zip.event.MessageEvent;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,12 +46,15 @@ public class MainActivity extends AppCompatActivity {
     private String mOutputPath;
     private String mInputFilePath;
     private ProgressDialog mProgressDialog;
+    private ExecutorService mExecutor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        mProgressDialog = new ProgressDialog(this);
+        mExecutor = Executors.newSingleThreadExecutor();
         mText7zVersion.setText(Z7Extractor.getLzmaVersion());
         File outFile = getExternalFilesDir("extracted");
         if (outFile == null || !outFile.exists()) {
@@ -62,17 +62,21 @@ public class MainActivity extends AppCompatActivity {
         }
         mOutputPath = outFile.getPath();
         mTextOutputPath.setText(mOutputPath);
-        EventBus.getDefault().register(this);
     }
 
     @Override
     protected void onDestroy() {
-        EventBus.getDefault().unregister(this);
+        mExecutor.shutdownNow();
         super.onDestroy();
+    }
+
+    private void showMessage(String msg) {
+        SnackbarUtils.with(mTextOutputPath).setMessage(msg).show();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             Uri uri = data.getData();
             String[] projection = {MediaStore.Images.Media.DATA};
@@ -80,8 +84,7 @@ public class MainActivity extends AppCompatActivity {
             int actual_image_column_index = actualisation.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             actualisation.moveToFirst();
             mInputFilePath = actualisation.getString(actual_image_column_index);
-            Toast.makeText(MainActivity.this,
-                    "Choose File:" + mInputFilePath, Toast.LENGTH_SHORT).show();
+            showMessage("Choose File:" + mInputFilePath);
             mTextFilePath.setText(mInputFilePath);
         }
     }
@@ -103,8 +106,7 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.button_extract)
     public void onMButtonExtractClicked() {
         if (TextUtils.isEmpty(mInputFilePath)) {
-            Toast.makeText(MainActivity.this, "Please Select 7z File First!",
-                    Toast.LENGTH_SHORT).show();
+            showMessage("Please Select 7z File First!");
             return;
         }
         doExtractFile();
@@ -124,53 +126,35 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    @SuppressWarnings("unused")
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onUnzipEvent(MessageEvent event) {
-        if (event.type == MessageEvent.DISMISS_MSG) {
-            mProgressDialog.cancel();
-        } else if (event.type == MessageEvent.SHOW_MSG) {
-            mProgressDialog.setMessage(event.message);
-        }
-    }
-
     /**
      * real extract process
      */
     private void doExtractFile() {
-        mProgressDialog = new ProgressDialog(this);
         mProgressDialog.show();
-        new Thread() {
-            @Override
-            public void run() {
-                Z7Extractor.extractFile(mInputFilePath, mOutputPath,
-                        new IExtractCallback() {
-                            @Override
-                            public void onStart() {
-                            }
+        mExecutor.submit(() ->
+                Z7Extractor.extractFile(mInputFilePath, mOutputPath, new UnzipCallback() {
+                    @Override
+                    public void onProgress(String name, long size) {
+                        runOnUiThread(() -> mProgressDialog.setMessage("name: "
+                                + name + "\nsize: " + size));
+                    }
 
-                            @Override
-                            public void onGetFileNum(int fileNum) {
-                            }
-
-                            @Override
-                            public void onProgress(String name, long size) {
-                                EventBus.getDefault().post(new MessageEvent(MessageEvent.SHOW_MSG,
-                                        "name: " + name + "\nsize: " + size));
-                            }
-
-                            @Override
-                            public void onError(int errorCode, String message) {
-                                EventBus.getDefault().post(new MessageEvent(MessageEvent.DISMISS_MSG));
-                            }
-
-                            @Override
-                            public void onSucceed() {
-                                EventBus.getDefault().post(new MessageEvent(MessageEvent.DISMISS_MSG));
-                            }
+                    @Override
+                    public void onError(int errorCode, String message) {
+                        runOnUiThread(() -> {
+                            showMessage(message);
+                            mProgressDialog.dismiss();
                         });
-            }
-        }.start();
+                    }
+
+                    @Override
+                    public void onSucceed() {
+                        runOnUiThread(() -> {
+                            showMessage("Succeed!!");
+                            mProgressDialog.dismiss();
+                        });
+                    }
+                }));
     }
 
     /**
@@ -178,38 +162,31 @@ public class MainActivity extends AppCompatActivity {
      */
     @OnClick(R.id.button_extract_asset)
     public void onMButtonExtractAssetClicked() {
-        mProgressDialog = new ProgressDialog(this);
         mProgressDialog.show();
-        new Thread() {
-            @Override
-            public void run() {
-                Z7Extractor.extractAsset(getAssets(), "TestAsset.7z", mOutputPath,
-                        new IExtractCallback() {
-                            @Override
-                            public void onStart() {
-                            }
-
-                            @Override
-                            public void onGetFileNum(int fileNum) {
-                            }
-
+        mExecutor.submit(() ->
+                Z7Extractor.extractAsset(getAssets(), "TestAsset.7z",
+                        mOutputPath, new UnzipCallback() {
                             @Override
                             public void onProgress(String name, long size) {
-                                EventBus.getDefault().post(new MessageEvent(MessageEvent.SHOW_MSG,
-                                        "name: " + name + "\nsize: " + size));
+                                runOnUiThread(() -> mProgressDialog.setMessage("name: "
+                                        + name + "\nsize: " + size));
                             }
 
                             @Override
                             public void onError(int errorCode, String message) {
-                                EventBus.getDefault().post(new MessageEvent(MessageEvent.DISMISS_MSG));
+                                runOnUiThread(() -> {
+                                    showMessage(message);
+                                    mProgressDialog.dismiss();
+                                });
                             }
 
                             @Override
                             public void onSucceed() {
-                                EventBus.getDefault().post(new MessageEvent(MessageEvent.DISMISS_MSG));
+                                runOnUiThread(() -> {
+                                    showMessage("Succeed!!");
+                                    mProgressDialog.dismiss();
+                                });
                             }
-                        });
-            }
-        }.start();
+                        }));
     }
 }

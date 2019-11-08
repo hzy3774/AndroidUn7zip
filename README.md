@@ -19,7 +19,7 @@ A simple library with lzma sdk for 7z extraction.(使用LZMA SDK解压7z压缩�
 * Add gradle dependencie:
 ```gradle
 dependencies {
-    implementation 'com.hzy:un7zip:1.5.0'
+    implementation 'com.hzy:un7zip:1.6.0'
 }
 ```
 * Or just download the aar [here](https://jcenter.bintray.com/com/hzy/un7zip/)
@@ -64,14 +64,21 @@ If you are using ProGuard you might need to add the following options:
 * [ransj](https://github.com/ransj) offered the way to extract 7z file from assets directly(添加了直接从assets解压的功能)
 
 ### About Me
- * GitHub: [http://huzongyao.github.io/](http://huzongyao.github.io/)
- * ITEye博客：[http://hzy3774.iteye.com/](http://hzy3774.iteye.com/)
- * 新浪微博: [http://weibo.com/hzy3774](http://weibo.com/hzy3774)
+ * GitHub: [https://huzongyao.github.io/](https://huzongyao.github.io/)
+ * ITEye博客：[https://hzy3774.iteye.com/](https://hzy3774.iteye.com/)
+ * 新浪微博: [https://weibo.com/hzy3774](https://weibo.com/hzy3774)
 
 ### Contact To Me
- * QQ: [377406997](http://wpa.qq.com/msgrd?v=3&uin=377406997&site=qq&menu=yes)
+ * QQ: [377406997](https://wpa.qq.com/msgrd?v=3&uin=377406997&site=qq&menu=yes)
  * Gmail: [hzy3774@gmail.com](mailto:hzy3774@gmail.com)
  * Foxmail: [hzy3774@qq.com](mailto:hzy3774@qq.com)
+ * WeChat: hzy3774
+
+ ![image](https://raw.githubusercontent.com/hzy3774/AndroidP7zip/master/misc/wechat.png)
+
+### Others
+ * 想捐助我喝杯热水(¥0.01起捐)</br>
+ ![donate](https://github.com/huzongyao/JChineseChess/blob/master/misc/donate.png?raw=true)
 
 
 

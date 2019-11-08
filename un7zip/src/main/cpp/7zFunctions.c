@@ -6,7 +6,6 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <string.h>
-#include <stdbool.h>
 #include "7zFunctions.h"
 #include "src/7zAlloc.h"
 #include "ndk-helper.h"
@@ -22,14 +21,11 @@
 #define PERIOD_4 (4 * 365 + 1)
 #define PERIOD_100 (PERIOD_4 * 25 - 1)
 #define PERIOD_400 (PERIOD_100 * 4 + 1)
-#define DEBUG_LOG NATIVE_LOG
 
 static const ISzAlloc g_Alloc = {SzAlloc, SzFree};
 
 void Print(const char *s) {
-    if (DEBUG_LOG) {
-        LOGD("%s", s);
-    }
+    LOGD("%s", s);
 }
 
 void PrintError(const char *s) {
@@ -45,7 +41,7 @@ static int Buf_EnsureSize(CBuf *dest, size_t size) {
 
 static size_t Utf16_To_Utf8_Calc(const UInt16 *src, const UInt16 *srcLim) {
     size_t size = 0;
-    for (; ;) {
+    for (;;) {
         UInt32 val;
         if (src == srcLim)
             return size;
@@ -70,7 +66,7 @@ static size_t Utf16_To_Utf8_Calc(const UInt16 *src, const UInt16 *srcLim) {
 }
 
 static Byte *Utf16_To_Utf8(Byte *dest, const UInt16 *src, const UInt16 *srcLim) {
-    for (; ;) {
+    for (;;) {
         UInt32 val;
         if (src == srcLim)
             return dest;
@@ -166,8 +162,7 @@ void UInt64ToStr(UInt64 value, char *s, int numDigits) {
     do {
         temp[pos++] = (char) ('0' + (unsigned) (value % 10));
         value /= 10;
-    }
-    while (value != 0);
+    } while (value != 0);
     for (numDigits -= pos; numDigits > 0; numDigits--)
         *s++ = ' ';
     do
@@ -226,7 +221,7 @@ void ConvertFileTimeToString(const CNtfsFileTime *nt, char *s) {
     v -= t * 365;
     if (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0))
         ms[1] = 29;
-    for (mon = 0; ; mon++) {
+    for (mon = 0;; mon++) {
         unsigned d = ms[mon];
         if (v < d)
             break;
@@ -283,7 +278,7 @@ void CallJavaIntStringMethod(JNIEnv *env, jobject obj, jmethodID id, int param1,
     }
 }
 
-void CallJavaStringLongMethod(JNIEnv *env, jobject obj, jmethodID id, char* param1, jlong param2) {
+void CallJavaStringLongMethod(JNIEnv *env, jobject obj, jmethodID id, char *param1, jlong param2) {
     if (id != NULL) {
         jstring jparam = (*env)->NewStringUTF(env, param1);
         (*env)->CallVoidMethod(env, obj, id, jparam, param2);

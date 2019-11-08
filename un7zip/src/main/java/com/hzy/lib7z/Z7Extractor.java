@@ -31,7 +31,7 @@ public class Z7Extractor {
      * @return status
      */
     public static int extractFile(String filePath, String outPath,
-                                      IExtractCallback callback) {
+                                  IExtractCallback callback) {
         File inputFile = new File(filePath);
         if (TextUtils.isEmpty(filePath) || !inputFile.exists() ||
                 TextUtils.isEmpty(outPath) || !prepareOutPath(outPath)) {
@@ -53,7 +53,7 @@ public class Z7Extractor {
      * @return status
      */
     public static int extractAsset(AssetManager assetManager, String fileName,
-                                       String outPath, IExtractCallback callback) {
+                                   String outPath, IExtractCallback callback) {
         if (TextUtils.isEmpty(fileName) || TextUtils.isEmpty(outPath) || !prepareOutPath(outPath)) {
             if (callback != null) {
                 callback.onError(ErrorCode.ERROR_CODE_PATH_ERROR, "File Path Error!");
@@ -78,14 +78,14 @@ public class Z7Extractor {
         return outDir.exists() && outDir.isDirectory();
     }
 
-    private static native int nExtractFile(String filePath, String outPath,
-                                               IExtractCallback callback, long inBufSize);
+    public static native int nExtractFile(String filePath, String outPath,
+                                          IExtractCallback callback, long inBufSize);
 
-    private static native int nExtractAsset(AssetManager assetManager,
-                                                String fileName, String outPath,
-                                                IExtractCallback callback, long inBufSize);
+    public static native int nExtractAsset(AssetManager assetManager,
+                                           String fileName, String outPath,
+                                           IExtractCallback callback, long inBufSize);
 
-    private static native String nGetLzmaVersion();
+    public static native String nGetLzmaVersion();
 
     static {
         System.loadLibrary("un7zip");
