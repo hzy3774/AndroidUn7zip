@@ -19,7 +19,7 @@ A simple library with lzma sdk for 7z extraction.(使用LZMA SDK解压7z压缩�
 * Add gradle dependencie:
 ```gradle
 dependencies {
-    implementation 'com.hzy:un7zip:1.7.0'
+    implementation 'com.hzy:un7zip:+'
 }
 ```
 * Or just download the aar [here](https://jcenter.bintray.com/com/hzy/un7zip/)
