@@ -13,24 +13,32 @@ public class Z7Extractor {
 
     public static final long DEFAULT_IN_BUF_SIZE = 0x1000000;
     private static final String lib7z = "un7zip";
+    private static boolean mLibLoaded = false;
 
     public static void init() {
         init(null);
     }
 
     public static void init(LibLoader loader) {
-        if (loader != null) {
-            loader.loadLibrary(lib7z);
-        } else {
-            System.loadLibrary(lib7z);
+        if (!mLibLoaded) {
+            if (loader != null) {
+                loader.loadLibrary(lib7z);
+            } else {
+                System.loadLibrary(lib7z);
+            }
+            mLibLoaded = true;
         }
     }
+
     /**
      * Get the Lzma version name
      *
      * @return Lzma version name
      */
     public static String getLzmaVersion() {
+        if (!mLibLoaded) {
+            init();
+        }
         return nGetLzmaVersion();
     }
 
@@ -44,6 +52,9 @@ public class Z7Extractor {
      */
     public static int extractFile(String filePath, String outPath,
                                   IExtractCallback callback) {
+        if (!mLibLoaded) {
+            init();
+        }
         File inputFile = new File(filePath);
         if (TextUtils.isEmpty(filePath) || !inputFile.exists() ||
                 TextUtils.isEmpty(outPath) || !prepareOutPath(outPath)) {
@@ -66,6 +77,9 @@ public class Z7Extractor {
      */
     public static int extractAsset(AssetManager assetManager, String fileName,
                                    String outPath, IExtractCallback callback) {
+        if (!mLibLoaded) {
+            init();
+        }
         if (TextUtils.isEmpty(fileName) || TextUtils.isEmpty(outPath) || !prepareOutPath(outPath)) {
             if (callback != null) {
                 callback.onError(ErrorCode.ERROR_CODE_PATH_ERROR, "File Path Error!");

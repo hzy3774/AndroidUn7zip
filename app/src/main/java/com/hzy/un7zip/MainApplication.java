@@ -11,12 +11,8 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Z7Extractor.init(new Z7Extractor.LibLoader() {
-            @Override
-            public void loadLibrary(String libName) {
-                ReLinker.loadLibrary(MainApplication.this, libName);
-            }
-        });
+        Z7Extractor.init(libName ->
+                ReLinker.loadLibrary(MainApplication.this, libName));
         Utils.init(this);
     }
 }

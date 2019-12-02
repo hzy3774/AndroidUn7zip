@@ -4,7 +4,7 @@ A simple library with lzma sdk for 7z extraction.(使用LZMA SDK解压7z压缩�
 
 [![auc][aucSvg]][auc] [![api][apiSvg]][api]
 
-[aucSvg]: https://img.shields.io/badge/AndroidUn7zip-v1.5.0-brightgreen.svg
+[aucSvg]: https://img.shields.io/badge/AndroidUn7zip-v1.7.0-brightgreen.svg
 [auc]: https://github.com/hzy3774/AndroidUn7zip
 
 [apiSvg]: https://img.shields.io/badge/API-14+-brightgreen.svg
@@ -19,7 +19,7 @@ A simple library with lzma sdk for 7z extraction.(使用LZMA SDK解压7z压缩�
 * Add gradle dependencie:
 ```gradle
 dependencies {
-    implementation 'com.hzy:un7zip:1.6.0'
+    implementation 'com.hzy:un7zip:1.7.0'
 }
 ```
 * Or just download the aar [here](https://jcenter.bintray.com/com/hzy/un7zip/)
