@@ -12,7 +12,19 @@ import java.io.File;
 public class Z7Extractor {
 
     public static final long DEFAULT_IN_BUF_SIZE = 0x1000000;
+    private static final String lib7z = "un7zip";
 
+    public static void init() {
+        init(null);
+    }
+
+    public static void init(LibLoader loader) {
+        if (loader != null) {
+            loader.loadLibrary(lib7z);
+        } else {
+            System.loadLibrary(lib7z);
+        }
+    }
     /**
      * Get the Lzma version name
      *
@@ -87,7 +99,7 @@ public class Z7Extractor {
 
     public static native String nGetLzmaVersion();
 
-    static {
-        System.loadLibrary("un7zip");
+    public interface LibLoader {
+        void loadLibrary(String libName);
     }
 }
