@@ -15,10 +15,10 @@ android {
         applicationId "com.hzy.un7zip"
         minSdkVersion 15
         targetSdkVersion 29
-        versionCode 9
-        versionName "1.7.1"
+        versionCode 10
+        versionName "1.7.2"
         ndk {
-            abiFilters 'armeabi-v7a'
+            //abiFilters 'armeabi-v7a'
         }
     }
     buildTypes {

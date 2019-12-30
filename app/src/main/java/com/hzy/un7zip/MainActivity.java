@@ -3,19 +3,18 @@ package com.hzy.un7zip;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.blankj.utilcode.constant.PermissionConstants;
+import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.SnackbarUtils;
+import com.blankj.utilcode.util.UriUtils;
 import com.hzy.lib7z.Z7Extractor;
 
 import java.io.File;
@@ -27,8 +26,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final int REQUEST_READ_EXTERNAL_STORAGE = 1;
 
     @BindView(R.id.text_7z_version)
     TextView mText7zVersion;
@@ -78,14 +75,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            Uri uri = data.getData();
-            String[] projection = {MediaStore.Images.Media.DATA};
-            Cursor actualisation = managedQuery(uri, projection, null, null, null);
-            int actual_image_column_index = actualisation.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            actualisation.moveToFirst();
-            mInputFilePath = actualisation.getString(actual_image_column_index);
-            showMessage("Choose File:" + mInputFilePath);
-            mTextFilePath.setText(mInputFilePath);
+            if (requestCode == 103) {
+                PermissionUtils.permission(PermissionConstants.STORAGE)
+                        .callback(new PermissionUtils.SimpleCallback() {
+                            @Override
+                            public void onGranted() {
+                                Uri uri = data.getData();
+                                if (uri != null) {
+                                    mInputFilePath = UriUtils.uri2File(uri).getPath();
+                                    showMessage("Choose File:" + mInputFilePath);
+                                    mTextFilePath.setText(mInputFilePath);
+                                }
+                            }
+
+                            @Override
+                            public void onDenied() {
+
+                            }
+                        }).request();
+            }
         }
     }
 
@@ -97,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        startActivityForResult(intent, 1);
+        startActivityForResult(intent, 103);
     }
 
     /**
@@ -109,21 +117,18 @@ public class MainActivity extends AppCompatActivity {
             showMessage("Please Select 7z File First!");
             return;
         }
-        doExtractFile();
-    }
+        PermissionUtils.permission(PermissionConstants.STORAGE)
+                .callback(new PermissionUtils.SimpleCallback() {
+                    @Override
+                    public void onGranted() {
+                        doExtractFile();
+                    }
 
-    /**
-     * request for some read storage permission for android 6.0+
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_READ_EXTERNAL_STORAGE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                doExtractFile();
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                    @Override
+                    public void onDenied() {
+
+                    }
+                }).request();
     }
 
     /**

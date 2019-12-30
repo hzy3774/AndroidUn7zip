@@ -2,15 +2,14 @@
 // Created by huzongyao on 17-11-24.
 //
 
-#include <stdint.h>
 #include <android/asset_manager_jni.h>
-#include "7zExtracter.h"
-#include "src/7zTypes.h"
-#include "src/7z.h"
-#include "src/7zFile.h"
-#include "src/7zAlloc.h"
-#include "src/7zAssetFile.h"
-#include "src/7zCrc.h"
+#include "7zExtractor.h"
+#include "7zTypes.h"
+#include "7z.h"
+#include "7zFile.h"
+#include "7zAlloc.h"
+#include "7zAssetFile.h"
+#include "7zCrc.h"
 #include "7zFunctions.h"
 
 #define OPTION_DETAIL 0x01
@@ -24,14 +23,14 @@ static SRes
 extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
               const int options, jobject callback, size_t inBufSize) {
 
-    jmethodID onGetFileNum = NULL;
-    jmethodID onError = NULL;
-    jmethodID onProgress = NULL;
-    if (callback != NULL) {
-        jclass callbackClass = (*env)->GetObjectClass(env, callback);
-        onGetFileNum = (*env)->GetMethodID(env, callbackClass, "onGetFileNum", "(I)V");
-        onError = (*env)->GetMethodID(env, callbackClass, "onError", "(ILjava/lang/String;)V");
-        onProgress = (*env)->GetMethodID(env, callbackClass, "onProgress", "(Ljava/lang/String;J)V");
+    jmethodID onGetFileNum = nullptr;
+    jmethodID onError = nullptr;
+    jmethodID onProgress = nullptr;
+    if (callback != nullptr) {
+        jclass callbackClass = env->GetObjectClass(callback);
+        onGetFileNum = env->GetMethodID(callbackClass, "onGetFileNum", "(I)V");
+        onError = env->GetMethodID(callbackClass, "onError", "(ILjava/lang/String;)V");
+        onProgress = env->GetMethodID(callbackClass, "onProgress", "(Ljava/lang/String;J)V");
     }
 
     ISzAlloc allocImp = g_Alloc;
@@ -39,14 +38,14 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
     CLookToRead2 lookStream;
     CSzArEx db;
     SRes res;
-    UInt16 *temp = NULL;
+    UInt16 *temp = nullptr;
     size_t tempSize = 0;
 
     LOGD("Stream In Buffer Size:[0X%lX]", inBufSize);
     LookToRead2_CreateVTable(&lookStream, False);
-    lookStream.buf = NULL;
+    lookStream.buf = nullptr;
     res = SZ_OK;
-    lookStream.buf = ISzAlloc_Alloc(&allocImp, inBufSize);
+    lookStream.buf = static_cast<Byte *>(ISzAlloc_Alloc(&allocImp, inBufSize));
     if (!lookStream.buf)
         res = SZ_ERROR_MEM;
     else {
@@ -67,7 +66,7 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
         if you use external function, you can make these variable as static.
         */
         UInt32 blockIndex = 0xFFFFFFFF; /* it can have any value before first call (if outBuffer = 0) */
-        Byte *outBuffer = 0; /* it must be 0 before first call for each new archive. */
+        Byte *outBuffer = nullptr; /* it must be 0 before first call for each new archive. */
         size_t outBufferSize = 0;  /* it can have any value before first call (if outBuffer = 0) */
         CBuf fileNameBuf;
         Buf_Init(&fileNameBuf);
@@ -77,7 +76,7 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
             size_t offset = 0;
             size_t outSizeProcessed = 0;
             size_t len;
-            unsigned isDir = (unsigned) SzArEx_IsDir(&db, i);
+            auto isDir = (unsigned) SzArEx_IsDir(&db, i);
             len = SzArEx_GetFileNameUtf16(&db, i, NULL);
             if (len > tempSize) {
                 SzFree(NULL, temp);
@@ -123,8 +122,7 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
                     size_t processedSize;
                     size_t j;
                     UInt16 *name = temp;
-                    const UInt16 *destPath = (const UInt16 *) name;
-
+                    const auto *destPath = (const UInt16 *) name;
                     for (j = 0; name[j] != 0; j++) {
                         if (name[j] == '/') {
                             name[j] = 0;
@@ -158,7 +156,7 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
         Buf_Free(&fileNameBuf, &g_Alloc);
         ISzAlloc_Free(&allocImp, outBuffer);
     }
-    SzFree(NULL, temp);
+    SzFree(nullptr, temp);
     SzArEx_Free(&db, &allocImp);
     ISzAlloc_Free(&allocImp, lookStream.buf);
     if (res != SZ_OK) {
@@ -171,15 +169,15 @@ extractStream(JNIEnv *env, ISeekInStream *seekStream, const char *destDir,
  * extract all from 7z
  */
 jint extractFile(JNIEnv *env, const char *srcFile, const char *destDir, jobject callback,
-                     jlong inBufSize) {
-    jmethodID onStart = NULL;
-    jmethodID onError = NULL;
-    jmethodID onSucceed = NULL;
-    if (callback != NULL) {
-        jclass  callbackClass = (*env)->GetObjectClass(env, callback);
-        onStart = (*env)->GetMethodID(env, callbackClass, "onStart", "()V");
-        onError = (*env)->GetMethodID(env, callbackClass, "onError", "(ILjava/lang/String;)V");
-        onSucceed = (*env)->GetMethodID(env, callbackClass, "onSucceed", "()V");
+                 jlong inBufSize) {
+    jmethodID onStart = nullptr;
+    jmethodID onError = nullptr;
+    jmethodID onSucceed = nullptr;
+    if (callback != nullptr) {
+        jclass callbackClass = env->GetObjectClass(callback);
+        onStart = env->GetMethodID(callbackClass, "onStart", "()V");
+        onError = env->GetMethodID(callbackClass, "onError", "(ILjava/lang/String;)V");
+        onSucceed = env->GetMethodID(callbackClass, "onSucceed", "()V");
     }
     CFileInStream archiveStream;
     CallJavaVoidMethod(env, callback, onStart);
@@ -201,15 +199,15 @@ jint extractFile(JNIEnv *env, const char *srcFile, const char *destDir, jobject 
  * extract from assets
  */
 jint extractAsset(JNIEnv *env, jobject assetsManager, const char *assetName,
-                      const char *destDir, jobject callback, jlong inBufSize) {
-    jmethodID onStart = NULL;
-    jmethodID onError = NULL;
-    jmethodID onSucceed = NULL;
-    if (callback != NULL) {
-        jclass  callbackClass = (*env)->GetObjectClass(env, callback);
-        onStart = (*env)->GetMethodID(env, callbackClass, "onStart", "()V");
-        onError = (*env)->GetMethodID(env, callbackClass, "onError", "(ILjava/lang/String;)V");
-        onSucceed = (*env)->GetMethodID(env, callbackClass, "onSucceed", "()V");
+                  const char *destDir, jobject callback, jlong inBufSize) {
+    jmethodID onStart = nullptr;
+    jmethodID onError = nullptr;
+    jmethodID onSucceed = nullptr;
+    if (callback != nullptr) {
+        jclass callbackClass = env->GetObjectClass(callback);
+        onStart = env->GetMethodID(callbackClass, "onStart", "()V");
+        onError = env->GetMethodID(callbackClass, "onError", "(ILjava/lang/String;)V");
+        onSucceed = env->GetMethodID(callbackClass, "onSucceed", "()V");
     }
     CAssetFileInStream archiveStream;
     CallJavaVoidMethod(env, callback, onStart);

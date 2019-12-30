@@ -7,22 +7,16 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 29
-        versionCode 9
-        versionName "1.7.1"
-    }
-    buildTypes {
-        debug {
-            externalNativeBuild {
-                cmake {
-                    cFlags.add('-DNATIVE_LOG')
-                }
-            }
-        }
+        versionCode 10
+        versionName "1.7.2"
     }
     externalNativeBuild {
-        cmake {
-            path 'src/main/cpp/CMakeLists.txt'
+        ndkBuild {
+            path 'src/main/cpp/Android.mk'
         }
+    }
+    lintOptions {
+        abortOnError false
     }
 }
 

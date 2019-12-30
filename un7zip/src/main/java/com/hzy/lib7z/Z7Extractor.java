@@ -11,7 +11,7 @@ import java.io.File;
 
 public class Z7Extractor {
 
-    public static final long DEFAULT_IN_BUF_SIZE = 0x1000000;
+    public static final long DEFAULT_IN_BUF_SIZE = 0x4000000;
     private static final String lib7z = "un7zip";
     private static boolean mLibLoaded = false;
 

@@ -7,9 +7,9 @@
 #include <errno.h>
 #include <string.h>
 #include "7zFunctions.h"
-#include "src/7zAlloc.h"
+#include "7zAlloc.h"
 #include "ndk-helper.h"
-#include "src/7zBuf.h"
+#include "7zBuf.h"
 
 #define PATH_MAX 4096
 
@@ -251,37 +251,39 @@ void GetAttribString(UInt32 wa, BoolInt isDir, char *s) {
 }
 
 void CallJavaVoidMethod(JNIEnv *env, jobject obj, jmethodID id) {
-    if (id != NULL) {
-        (*env)->CallVoidMethod(env, obj, id);
+    if (id != nullptr) {
+        env->CallVoidMethod(obj, id);
     }
 }
 
 void CallJavaIntMethod(JNIEnv *env, jobject obj, jmethodID id, jint param) {
-    if (id != NULL) {
-        (*env)->CallVoidMethod(env, obj, id, param);
+    if (id != nullptr) {
+        env->CallVoidMethod(obj, id, param);
     }
 }
 
-void CallJavaStringMethod(JNIEnv *env, jobject obj, jmethodID id, char *param) {
-    if (id != NULL) {
-        jstring jparam = (*env)->NewStringUTF(env, param);
-        (*env)->CallVoidMethod(env, obj, id, jparam);
-        (*env)->DeleteLocalRef(env, jparam);
+void CallJavaStringMethod(JNIEnv *env, jobject obj, jmethodID id, const char *param) {
+    if (id != nullptr) {
+        jstring jparam = env->NewStringUTF(param);
+        env->CallVoidMethod(obj, id, jparam);
+        env->DeleteLocalRef(jparam);
     }
 }
 
-void CallJavaIntStringMethod(JNIEnv *env, jobject obj, jmethodID id, int param1, char *param2) {
-    if (id != NULL) {
-        jstring jparam = (*env)->NewStringUTF(env, param2);
-        (*env)->CallVoidMethod(env, obj, id, param1, jparam);
-        (*env)->DeleteLocalRef(env, jparam);
+void
+CallJavaIntStringMethod(JNIEnv *env, jobject obj, jmethodID id, int param1, const char *param2) {
+    if (id != nullptr) {
+        jstring jparam = env->NewStringUTF(param2);
+        env->CallVoidMethod(obj, id, param1, jparam);
+        env->DeleteLocalRef(jparam);
     }
 }
 
-void CallJavaStringLongMethod(JNIEnv *env, jobject obj, jmethodID id, char *param1, jlong param2) {
-    if (id != NULL) {
-        jstring jparam = (*env)->NewStringUTF(env, param1);
-        (*env)->CallVoidMethod(env, obj, id, jparam, param2);
-        (*env)->DeleteLocalRef(env, jparam);
+void
+CallJavaStringLongMethod(JNIEnv *env, jobject obj, jmethodID id, const char *param1, jlong param2) {
+    if (id != nullptr) {
+        jstring jparam = env->NewStringUTF(param1);
+        env->CallVoidMethod(obj, id, jparam, param2);
+        env->DeleteLocalRef(jparam);
     }
 }

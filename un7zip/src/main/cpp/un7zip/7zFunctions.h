@@ -2,14 +2,18 @@
 // Created by HZY on 2017/11/25.
 //
 
-#include "src/7zTypes.h"
-#include "src/7zFile.h"
-#include "src/7z.h"
+#include "7zTypes.h"
+#include "7zFile.h"
+#include "7z.h"
 #include "ndk-helper.h"
-#include "src/7zBuf.h"
+#include "7zBuf.h"
 
 #ifndef ANDROIDUN7ZIP_7ZFUNCTIONS_H
 #define ANDROIDUN7ZIP_7ZFUNCTIONS_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void Print(const char *s);
 
@@ -35,10 +39,16 @@ void CallJavaVoidMethod(JNIEnv *env, jobject obj, jmethodID id);
 
 void CallJavaIntMethod(JNIEnv *env, jobject obj, jmethodID id, jint param);
 
-void CallJavaStringMethod(JNIEnv *env, jobject obj, jmethodID id, char *param);
+void CallJavaStringMethod(JNIEnv *env, jobject obj, jmethodID id, const char *param);
 
-void CallJavaIntStringMethod(JNIEnv *env, jobject obj, jmethodID id, int param1, char *param2);
+void
+CallJavaIntStringMethod(JNIEnv *env, jobject obj, jmethodID id, int param1, const char *param2);
 
-void CallJavaStringLongMethod(JNIEnv *env, jobject obj, jmethodID id, char* param1, jlong param2);
+void
+CallJavaStringLongMethod(JNIEnv *env, jobject obj, jmethodID id, const char *param1, jlong param2);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //ANDROIDUN7ZIP_7ZFUNCTIONS_H
