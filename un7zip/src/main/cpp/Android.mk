@@ -14,7 +14,7 @@ LOCAL_SRC_FILES := \
     $(wildcard $(LOCAL_PATH)/un7zip/*.cpp) \
 
 LOCAL_CFLAGS += -Wall -ffunction-sections -fdata-sections
-LOCAL_CXXFLAGS += -Wall -fexceptions -ffunction-sections -fdata-sections
+LOCAL_CXXFLAGS += -Wall -frtti -fexceptions -ffunction-sections -fdata-sections
 LOCAL_LDFLAGS += -Wl,--gc-sections
 
 LOCAL_LDLIBS := -llog -landroid
