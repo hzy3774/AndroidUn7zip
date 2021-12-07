@@ -17,7 +17,17 @@ A simple library with lzma sdk for 7z extraction.(使用LZMA SDK解压7z压缩�
 
 #### Begin To Use
 * Add gradle dependencie:
-```gradle
+``` gradle
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+   implementation 'com.github.hzy3774:AndroidP7zip:v1.7.2'
+}
+```
+
+``` gradle
 dependencies {
     implementation 'com.hzy:un7zip:+'
 }
