@@ -16,6 +16,7 @@ LOCAL_SRC_FILES := \
 LOCAL_CFLAGS += -Wall -ffunction-sections -fdata-sections
 LOCAL_CXXFLAGS += -Wall -frtti -fexceptions -ffunction-sections -fdata-sections
 LOCAL_LDFLAGS += -Wl,--gc-sections
+LOCAL_LDFLAGS += -Wl,-z,max-page-size=16384
 
 LOCAL_LDLIBS := -llog -landroid
 

@@ -21,23 +21,13 @@ import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.text_7z_version)
     TextView mText7zVersion;
-    @BindView(R.id.text_file_path)
     TextView mTextFilePath;
-    @BindView(R.id.button_choose_file)
     Button mButtonChooseFile;
-    @BindView(R.id.button_extract)
     Button mButtonExtract;
-    @BindView(R.id.button_extract_asset)
     Button mButtonExtractAsset;
-    @BindView(R.id.text_output_path)
     TextView mTextOutputPath;
 
     private String mOutputPath;
@@ -49,7 +39,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        mText7zVersion = findViewById(R.id.text_7z_version);
+        mTextFilePath = findViewById(R.id.text_file_path);
+        mButtonChooseFile = findViewById(R.id.button_choose_file);
+        mButtonExtract = findViewById(R.id.button_extract);
+        mButtonExtractAsset = findViewById(R.id.button_extract_asset);
+        mTextOutputPath = findViewById(R.id.text_output_path);
+        mButtonChooseFile.setOnClickListener(v -> onMButtonChooseFileClicked());
+        mButtonExtract.setOnClickListener(v -> onMButtonExtractClicked());
+        mButtonExtractAsset.setOnClickListener(v -> onMButtonExtractAssetClicked());
         mProgressDialog = new ProgressDialog(this);
         mExecutor = Executors.newSingleThreadExecutor();
         mText7zVersion.setText(Z7Extractor.getLzmaVersion());
@@ -97,10 +95,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * start to select some file
-     */
-    @OnClick(R.id.button_choose_file)
     public void onMButtonChooseFileClicked() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
@@ -108,10 +102,6 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, 103);
     }
 
-    /**
-     * start to extract from selected file
-     */
-    @OnClick(R.id.button_extract)
     public void onMButtonExtractClicked() {
         if (TextUtils.isEmpty(mInputFilePath)) {
             showMessage("Please Select 7z File First!");
@@ -162,10 +152,6 @@ public class MainActivity extends AppCompatActivity {
                 }));
     }
 
-    /**
-     * extract some files from assets
-     */
-    @OnClick(R.id.button_extract_asset)
     public void onMButtonExtractAssetClicked() {
         mProgressDialog.show();
         mExecutor.submit(() ->
