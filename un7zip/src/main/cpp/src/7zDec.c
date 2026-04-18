@@ -31,6 +31,7 @@
 #define k_ARM   0x3030501
 #define k_ARMT  0x3030701
 #define k_SPARC 0x3030805
+#define k_ARM64 0xA
 
 
 #ifdef _7ZIP_PPMD_SUPPPORT
@@ -333,6 +334,7 @@ static SRes CheckSupportedFolder(const CSzFolder *f)
       case k_SPARC:
       case k_ARM:
       case k_ARMT:
+      case k_ARM64:
         break;
       default:
         return SZ_ERROR_UNSUPPORTED;
@@ -532,6 +534,7 @@ static SRes SzFolder_Decode2(const CSzFolder *folder,
           CASE_BRA_CONV(SPARC)
           CASE_BRA_CONV(ARM)
           CASE_BRA_CONV(ARMT)
+          CASE_BRA_CONV(ARM64)
           default:
             return SZ_ERROR_UNSUPPORTED;
         }

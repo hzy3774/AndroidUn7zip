@@ -61,6 +61,65 @@ SizeT ARM_Convert(Byte *data, SizeT size, UInt32 ip, int encoding)
 }
 
 
+SizeT ARM64_Convert(Byte *data, SizeT size, UInt32 ip, int encoding)
+{
+  /*
+   * ARM64 Branch/Call/Jump (BCJ) filter decoder
+   * Adapted from xz-embedded project by Lasse Collin and Igor Pavlov
+   * This file has been put into the public domain.
+   */
+  
+  SizeT i;
+  UInt32 instr;
+  UInt32 addr;
+  
+  size &= ~(SizeT)3;  /* Align to 4 bytes */
+  
+  for (i = 0; i + 4 <= size; i += 4)
+  {
+    instr = GetUi32(data + i);
+    
+    if ((instr >> 26) == 0x25)
+    {
+      /* BL (Branch with Link) instruction */
+      addr = instr & 0x03FFFFFF;
+      
+      if (encoding)
+        addr += (ip + (UInt32)i) >> 2;
+      else
+        addr -= (ip + (UInt32)i) >> 2;
+      
+      instr = 0x94000000 | (addr & 0x03FFFFFF);
+      
+      SetUi32(data + i, instr);
+    }
+    else if ((instr & 0x9F000000) == 0x90000000)
+    {
+      /* ADRP (Address of a Page) instruction */
+      addr = ((instr >> 29) & 3) | ((instr >> 3) & 0x1FFFFC);
+      
+      /* Only convert values in the range +/-512 MiB */
+      if ((addr + 0x020000) & 0x1C0000)
+        continue;
+      
+      if (encoding)
+        addr += (ip + (UInt32)i) >> 12;
+      else
+        addr -= (ip + (UInt32)i) >> 12;
+      
+      instr &= 0x9000001F;
+      instr |= (addr & 3) << 29;
+      instr |= (addr & 0x03FFFC) << 3;
+      instr |= (0U - (addr & 0x020000)) & 0xE00000;
+      
+      SetUi32(data + i, instr);
+    }
+  }
+  
+  return i;
+}
+
+
 SizeT ARMT_Convert(Byte *data, SizeT size, UInt32 ip, int encoding)
 {
   Byte *p;

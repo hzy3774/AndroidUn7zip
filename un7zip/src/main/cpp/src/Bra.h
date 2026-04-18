@@ -58,6 +58,7 @@ SizeT ARMT_Convert(Byte *data, SizeT size, UInt32 ip, int encoding);
 SizeT PPC_Convert(Byte *data, SizeT size, UInt32 ip, int encoding);
 SizeT SPARC_Convert(Byte *data, SizeT size, UInt32 ip, int encoding);
 SizeT IA64_Convert(Byte *data, SizeT size, UInt32 ip, int encoding);
+SizeT ARM64_Convert(Byte *data, SizeT size, UInt32 ip, int encoding);
 
 EXTERN_C_END
 
